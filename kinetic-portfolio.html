@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sustainable Quality Horizon - Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/duo3tdm.css">
+<style>
+  @font-face{
+    font-family:"Druk Wide Web";
+    src:url("./DrukWide-Medium-Web.woff2") format("woff2");
+    font-weight:500;
+    font-style:normal;
+    font-stretch:normal;
+  }
+  @font-face{
+    font-family:"Druk Wide Web";
+    src:url("./DrukWide-Super-Web.woff2") format("woff2");
+    font-weight:900;
+    font-style:normal;
+    font-stretch:normal;
+  }
+  :root{
+    --violet:#4801ff;
+    --violet-deep:#3600c9;
+    --paper:#f2f2f2;
+    --ink:#020006;
+    --muted:rgba(242,242,242,.66);
+    --pad:clamp(1rem,4.2vw,3.7rem);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  html{min-height:100%;scroll-behavior:auto}
+  body{
+    width:100%;
+    min-width:1120px;
+    min-height:100vh;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px) 0 0/24vw 100%,
+      var(--violet);
+    color:var(--paper);
+    font-family:"akzidenz-grotesk","Space Mono",sans-serif;
+    overflow:hidden;
+  }
+  body.loading,
+  body.intro{overflow:hidden}
+  ::selection{background:var(--paper);color:var(--violet)}
+  a{color:inherit}
+
+  .curtain{
+    position:fixed;
+    inset:0;
+    z-index:40;
+    background:var(--violet);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .5s ease,visibility 0s linear .5s;
+  }
+  body.loading .curtain{
+    opacity:1;
+    visibility:visible;
+    transition-delay:0s;
+  }
+
+  .corner{
+    position:fixed;
+    z-index:20;
+    font-size:.78rem;
+    line-height:1.42;
+    letter-spacing:0;
+    text-shadow:0 1px 18px rgba(0,0,0,.18);
+  }
+  .corner.bl{left:var(--pad);bottom:var(--pad)}
+  .corner.tr{
+    left:clamp(20rem,31vw,31rem);
+    right:auto;
+    bottom:max(.75rem,calc(var(--pad) - 1.38rem));
+    top:auto;
+    width:min(49vw,760px);
+  }
+  .corner.br{
+    right:var(--pad);
+    bottom:max(.75rem,calc(var(--pad) - 1.1rem));
+    text-align:left;
+  }
+
+  .wordmark{
+    display:block;
+    color:var(--paper);
+    font-family:"Druk Wide Web","Archivo Black",sans-serif;
+    font-weight:500;
+    font-size:40px;
+    line-height:.85;
+    letter-spacing:0;
+    text-transform:uppercase;
+    text-decoration:none;
+  }
+  .wordmark.long{
+    font-size:clamp(22px,2.15vw,32px);
+    line-height:.88;
+  }
+  .wordmark .word-line{
+    display:block;
+    overflow:hidden;
+    padding-bottom:.05em;
+  }
+  .wordmark .word-line span{
+    display:block;
+    transform:translateY(118%);
+  }
+  .meta{
+    display:flex;
+    gap:clamp(1.5rem,4.5vw,3.4rem);
+    margin-top:clamp(1.2rem,2.6vw,2rem);
+    flex-wrap:wrap;
+    color:var(--paper);
+  }
+  .meta .lbl{
+    position:absolute;
+    inline-size:1px;
+    block-size:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+  }
+  .meta a{
+    color:inherit;
+    text-decoration:none;
+    border-bottom:1px solid rgba(242,242,242,.45);
+    transition:border-color .25s,color .25s;
+  }
+  .meta a:hover{border-color:var(--paper);color:#fff}
+
+  #nav{
+    list-style:none;
+    display:grid;
+    grid-template-columns:max-content max-content;
+    grid-template-rows:repeat(3,auto);
+    column-gap:clamp(3rem,32vw,29rem);
+    row-gap:.14rem;
+  }
+  #nav li{
+    display:flex;
+    gap:1.1rem;
+    align-items:baseline;
+    color:var(--muted);
+    transition:color .2s,transform .2s;
+  }
+  #nav li:nth-child(1){grid-column:1;grid-row:1}
+  #nav li:nth-child(2){grid-column:1;grid-row:2}
+  #nav li:nth-child(3){grid-column:2;grid-row:1}
+  #nav li:nth-child(4){grid-column:2;grid-row:2}
+  #nav li:nth-child(5){grid-column:2;grid-row:3}
+  #nav li .n{font-size:.58rem;color:rgba(242,242,242,.62)}
+  #nav li a,
+  #nav li button{
+    color:inherit;
+    border:0;
+    background:transparent;
+    padding:0;
+    font-family:"Archivo Black",sans-serif;
+    font-size:.78rem;
+    text-transform:lowercase;
+    letter-spacing:0;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  #nav li:hover{color:var(--paper);transform:translateX(6px);cursor:pointer}
+
+  .br .row{
+    display:flex;
+    gap:.65rem;
+    justify-content:flex-start;
+    line-height:1.42;
+  }
+  .br .row b,
+  .br .row a{
+    color:var(--paper);
+    font-family:"Archivo Black",sans-serif;
+    font-weight:700;
+    text-transform:lowercase;
+    font-size:.78rem;
+    line-height:1.42;
+    letter-spacing:0;
+    text-decoration:none;
+  }
+  .br .row a{
+    border-bottom:1px solid rgba(242,242,242,.35);
+    transition:border-color .25s,color .25s;
+  }
+  .br .row a:hover{border-color:var(--paper);color:#fff}
+  .br small{
+    display:block;
+    max-width:15rem;
+    color:var(--muted);
+    margin-top:.3rem;
+    font-size:.58rem;
+    line-height:1.42;
+    letter-spacing:0;
+  }
+
+  .contact-modal{
+    position:fixed;
+    inset:0;
+    z-index:60;
+    display:grid;
+    place-items:center;
+    padding:var(--pad);
+    background:rgba(2,0,6,.28);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .25s ease,visibility 0s linear .25s;
+  }
+  .contact-modal.is-open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transition-delay:0s;
+  }
+  .contact-dialog{
+    position:relative;
+    width:min(360px,calc(100vw - var(--pad) * 2));
+    min-height:260px;
+    padding:26px;
+    background:var(--paper);
+    color:var(--ink);
+    box-shadow:0 24px 80px rgba(2,0,6,.24);
+  }
+  .contact-dialog h2{
+    margin:0 0 18px;
+    font-family:"Archivo Black",sans-serif;
+    font-size:18px;
+    line-height:1;
+    text-transform:lowercase;
+  }
+  .modal-close{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:30px;
+    height:30px;
+    border:0;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .modal-close::before,
+  .modal-close::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:22px;
+    height:2px;
+    background:currentColor;
+  }
+  .modal-close::before{transform:translate(-50%,-50%) rotate(45deg)}
+  .modal-close::after{transform:translate(-50%,-50%) rotate(-45deg)}
+  .qr-placeholder{
+    display:grid;
+    place-items:center;
+    width:210px;
+    height:210px;
+    margin:6px auto 0;
+    border:2px solid var(--ink);
+    background:
+      linear-gradient(90deg,var(--ink) 10px,transparent 10px 20px,var(--ink) 20px 30px,transparent 30px) 0 0/40px 40px,
+      linear-gradient(var(--ink) 10px,transparent 10px 20px,var(--ink) 20px 30px,transparent 30px) 0 0/40px 40px,
+      var(--paper);
+    background-blend-mode:multiply;
+  }
+  .qr-placeholder span{
+    display:grid;
+    place-items:center;
+    width:86px;
+    height:32px;
+    background:var(--paper);
+    font-family:"Archivo Black",sans-serif;
+    font-size:14px;
+    text-transform:uppercase;
+  }
+  .modal-value{
+    display:block;
+    margin-top:55px;
+    font-family:"Archivo Black",sans-serif;
+    font-size:24px;
+    line-height:1.1;
+  }
+  .modal-note{
+    display:block;
+    margin-top:16px;
+    color:rgba(5,0,9,.58);
+    font-size:12px;
+    line-height:1.5;
+  }
+
+  .stagePerspective{
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow-x:hidden;
+    overflow-y:hidden;
+    perspective:100vw;
+    perspective-origin:50% 50%;
+  }
+  body.loading .stagePerspective,
+  body.intro .stagePerspective{overflow:hidden}
+  .stageContainer{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    opacity:0;
+    transform:translateZ(0);
+    transform-style:preserve-3d;
+  }
+
+  .stage{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    padding:5vw 5vw calc(7.5vw + 67px) 0;
+    transform-style:preserve-3d;
+    will-change:transform;
+    pointer-events:none;
+  }
+  .projects{
+    position:relative;
+    margin:0;
+    padding-left:0;
+    list-style:none;
+    text-align:right;
+    width:95%;
+    max-width:none;
+    transform-style:preserve-3d;
+    transform:translate3d(0,0,0);
+    will-change:transform;
+    pointer-events:auto;
+  }
+  .projectsLi{
+    transform-style:preserve-3d;
+    pointer-events:auto;
+    cursor:pointer;
+  }
+  .projectContainer{
+    transform:rotateY(-45deg) translateZ(0) scale(1);
+    transform-origin:right center;
+    transform-style:preserve-3d;
+    will-change:transform;
+    transition:transform 1.5s cubic-bezier(.075,.82,.165,1),opacity 1.5s cubic-bezier(.075,.82,.165,1);
+    pointer-events:auto;
+    backface-visibility:hidden;
+  }
+  body.intro .stage{
+    transform:translate3d(0,-110%,0);
+    animation:stageIntro 2s forwards;
+  }
+  body.intro .projectContainer{
+    visibility:hidden;
+    transition:none;
+    animation:projectIntro 2s forwards;
+  }
+  body.intro .projectsLi:nth-child(8n+1) .projectContainer{animation-delay:.9s}
+  body.intro .projectsLi:nth-child(8n+2) .projectContainer{animation-delay:.8s}
+  body.intro .projectsLi:nth-child(8n+3) .projectContainer{animation-delay:.7s}
+  body.intro .projectsLi:nth-child(8n+4) .projectContainer{animation-delay:.6s}
+  body.intro .projectsLi:nth-child(8n+5) .projectContainer{animation-delay:.5s}
+  body.intro .projectsLi:nth-child(8n+6) .projectContainer{animation-delay:.4s}
+  body.intro .projectsLi:nth-child(8n+7) .projectContainer{animation-delay:.3s}
+  body.intro .projectsLi:nth-child(8n+8) .projectContainer{animation-delay:.2s}
+  @keyframes stageIntro{
+    0%{transform:translate3d(0,-110%,0)}
+    100%{transform:translate3d(0,0,0)}
+  }
+  @keyframes projectIntro{
+    0%{visibility:visible;opacity:0;transform:rotateY(-100deg) translateZ(0) scale(1)}
+    100%{visibility:visible;opacity:1;transform:rotateY(-45deg) translateZ(0) scale(1)}
+  }
+  body:not(.intro) .projectsLi.isHovered .projectContainer{
+    transform:rotateY(-35deg) translateZ(0) scale(1);
+    transition-duration:1s;
+  }
+  body:not(.intro):not(.outro) .projectsLi.isSelected .projectContainer,
+  body:not(.intro):not(.outro) .projectsLi.isSelected.isHovered .projectContainer{
+    transform:rotateY(0deg) translateZ(0) scale(1);
+    transition-duration:1.5s;
+  }
+  .proj{
+    position:relative;
+    display:inline-block;
+    color:var(--ink);
+    text-decoration:none;
+    font-family:"Druk Wide Web","Archivo Black",sans-serif;
+    font-weight:900;
+    font-size:9.6vw;
+    line-height:.9;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    pointer-events:auto;
+    -webkit-text-stroke:3px var(--ink);
+    transition:color .5s,opacity .5s,-webkit-text-stroke-width .5s;
+    opacity:1;
+    transform:none;
+    isolation:isolate;
+    backface-visibility:hidden;
+  }
+  .proj::before{
+    content:none;
+    display:none;
+    white-space:pre;
+    position:absolute;
+    top:3.7em;
+    left:-315px;
+    width:250px;
+    text-align:right;
+    color:var(--ink);
+    font-family:"akzidenz-grotesk","Space Mono",sans-serif;
+    font-size:.7vw;
+    font-weight:400;
+    letter-spacing:0;
+    line-height:1em;
+    -webkit-text-stroke:0 transparent;
+    z-index:3;
+    pointer-events:none;
+  }
+  .proj::after{
+    content:none;
+    display:none;
+    position:absolute;
+    top:.23em;
+    left:-.3em;
+    width:2px;
+    height:.85em;
+    background:var(--ink);
+    transform:rotate(25deg);
+    z-index:3;
+    pointer-events:none;
+  }
+  .projects.isHovering .projectsLi.isHovered .proj{
+    color:transparent;
+    -webkit-text-stroke:3px #151515;
+  }
+  @media screen and (min-width:768px){
+    .proj{
+      font-size:7.4vw;
+      -webkit-text-stroke-width:clamp(2px,.16vw,3px);
+    }
+    .projects.isHovering .projectsLi.isHovered .proj{
+      -webkit-text-stroke-width:clamp(2px,.16vw,3px);
+    }
+    .proj::after{
+      width:2px;
+    }
+  }
+  body:not(.intro):not(.outro) .projectsLi.isSelected .proj,
+  body:not(.intro):not(.outro) .projectsLi.isSelected.isHovered .proj{
+    color:var(--ink);
+    -webkit-text-stroke:0 var(--ink);
+  }
+
+  body.outro{
+    overflow:hidden;
+    pointer-events:none;
+  }
+  body.outro .stagePerspective{
+    overflow:hidden;
+  }
+  body.outro .stageContainer{
+    transform:translateZ(0);
+    animation:stageOutro .5s cubic-bezier(.39,.575,.565,1) 1.15s forwards;
+  }
+  body.outro .projectContainer{
+    transition:transform 1.5s cubic-bezier(.075,.82,.165,1),opacity 1.5s cubic-bezier(.075,.82,.165,1);
+  }
+  body.outro .projectsLi:not(.isSelected) .projectContainer{
+    transform:rotateY(-114deg) translateZ(0) scale(1);
+    opacity:0;
+    transition-delay:var(--outro-delay,0s);
+    transition-duration:.25s;
+    transition-timing-function:cubic-bezier(.55,.055,.675,.19);
+  }
+  body.outro .projectsLi.isSelected .projectContainer,
+  body.outro .projectsLi.isSelected.isHovered .projectContainer{
+    transform:rotateY(0deg) translateZ(0) scale(.7);
+    opacity:0;
+    transition-delay:1s;
+    transition-duration:.5s;
+  }
+  body.outro .projectsLi.isSelected .proj{
+    color:var(--ink);
+    -webkit-text-stroke:0 var(--ink);
+    transition-delay:1.15s;
+  }
+  body.outro .projectsLi.isSelected .proj::before,
+  body.outro .projectsLi.isSelected .proj::after{
+    opacity:0;
+    transition:opacity .2s ease-out .15s;
+  }
+  @keyframes stageOutro{
+    0%{transform:translateZ(0)}
+    100%{transform:translate3d(0,-25vh,0)}
+  }
+
+  .about-panel{
+    display:none;
+    position:relative;
+    z-index:15;
+    width:min(65rem,calc(100vw - var(--pad) * 2));
+    margin:0 var(--pad) 22vh auto;
+    padding-top:8vh;
+    color:var(--paper);
+  }
+  body.about-open .about-panel{
+    display:block;
+    position:fixed;
+    inset:0;
+    width:100%;
+    margin:0;
+    padding:calc(6vh + 60px) 5vw 8vh 5vw;
+    overflow-y:auto;
+    background:rgba(72,1,255,.94);
+  }
+  body.about-open .stagePerspective{
+    pointer-events:none;
+  }
+  .about-close{
+    position:fixed;
+    top:5vh;
+    right:60px;
+    z-index:25;
+    width:50px;
+    height:50px;
+    border:1px solid rgba(242,242,242,.45);
+    border-radius:50%;
+    background:transparent;
+    color:var(--paper);
+    cursor:pointer;
+    opacity:.9;
+    transition:border-color .25s,opacity .25s,transform .25s;
+  }
+  .about-close::before,
+  .about-close::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:25px;
+    height:2px;
+    background:currentColor;
+    border-radius:1px;
+  }
+  .about-close::before{transform:translate(-50%,-50%) rotate(-45deg)}
+  .about-close::after{transform:translate(-50%,-50%) rotate(45deg)}
+  .about-close:hover{
+    border-color:var(--paper);
+    opacity:1;
+    transform:scale(1.04);
+  }
+  .about-panel h1{
+    max-width:58rem;
+    font-family:"Archivo Black",sans-serif;
+    font-size:clamp(2rem,5vw,5.1rem);
+    line-height:.93;
+    letter-spacing:0;
+    text-transform:uppercase;
+  }
+  .about-panel p{
+    max-width:42rem;
+    margin-top:2rem;
+    color:rgba(242,242,242,.78);
+    font-size:clamp(.9rem,1.3vw,1.06rem);
+    line-height:1.7;
+  }
+  .details{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(1.2rem,3vw,3rem);
+    margin-top:clamp(3rem,8vw,6rem);
+    border-top:1px solid rgba(242,242,242,.2);
+    padding-top:1.4rem;
+  }
+  .details h2{
+    color:rgba(242,242,242,.58);
+    font-family:"Space Mono",monospace;
+    font-size:.68rem;
+    font-weight:400;
+    text-transform:uppercase;
+    letter-spacing:0;
+  }
+  .details strong{
+    display:block;
+    margin:.85rem 0 .6rem;
+    color:var(--paper);
+    font-family:"Archivo Black",sans-serif;
+    font-size:.95rem;
+    line-height:1.1;
+    text-transform:uppercase;
+  }
+  .details ul{list-style:none;color:rgba(242,242,242,.76);line-height:1.7;font-size:.78rem}
+
+  .ready .wordmark .word-line span{
+    animation:slideUp .95s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  .ready .wordmark .word-line:nth-child(1) span{animation-delay:2s}
+  .ready .wordmark .word-line:nth-child(2) span{animation-delay:2.2s}
+  .ready .wordmark .word-line:nth-child(3) span{animation-delay:2.4s}
+  .meta > div,
+  #nav li,
+  .corner.br{
+    opacity:0;
+    transform:translateY(34px);
+  }
+  .ready .meta > div:nth-child(1){animation:infoIn 1s 2.4s cubic-bezier(.16,1,.3,1) forwards}
+  .ready .meta > div:nth-child(2){animation:infoIn 1s 2.6s cubic-bezier(.16,1,.3,1) forwards}
+  .ready #nav li:nth-child(1),
+  .ready #nav li:nth-child(2){animation:infoIn 1s 2.8s cubic-bezier(.16,1,.3,1) forwards}
+  .ready #nav li:nth-child(3),
+  .ready #nav li:nth-child(4),
+  .ready #nav li:nth-child(5){animation:infoIn 1s 3s cubic-bezier(.16,1,.3,1) forwards}
+  .ready .corner.br{animation:infoIn 1s 3.2s cubic-bezier(.16,1,.3,1) forwards}
+  @keyframes slideUp{to{transform:translateY(0)}}
+  @keyframes infoIn{to{opacity:1;transform:translateY(0)}}
+
+</style>
+</head>
+<body class="loading intro">
+  <div class="curtain" aria-hidden="true"></div>
+
+  <div class="stagePerspective" id="stagePerspective">
+    <div class="stageContainer" id="stageContainer">
+      <main class="stage" id="stage" aria-label="Selected work">
+        <ul class="projects" id="projects">
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-01.html" data-info="2026">Quality<br>Horizon</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-02.html" data-info="2026">Character<br>Atlas</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-03.html" data-info="2025">IP<br>Design</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-04.html" data-info="2025">Prompt<br>Studies</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-05.html" data-info="2025">AI Training<br>Notes</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-06.html" data-info="2024">Visual<br>System</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-07.html" data-info="2024">Companion<br>Current</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-08.html" data-info="2024">Case<br>Experiments</a></div></li>
+        </ul>
+      </main>
+    </div>
+  </div>
+
+  <section class="about-panel" id="about" aria-label="About the studio" aria-hidden="true">
+    <button class="about-close" type="button" aria-label="Back" data-about-close></button>
+    <h1>AI training work shaped by durable systems, narrative clarity, and careful iteration.</h1>
+    <p>Sustainable Quality Horizon is the personal portfolio of Sun Qihao, an AI Trainer based in Beijing. The work gathers prompt studies, character-world archives, radio experiments, and structured case notes.</p>
+    <div class="details">
+      <div>
+        <h2>Availability</h2>
+        <strong>Open to projects</strong>
+        <ul>
+          <li>Beijing based</li>
+          <li>AI and creative systems</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Services</h2>
+        <strong>AI Training</strong>
+        <ul>
+          <li>Prompt evaluation</li>
+          <li>Dataset thinking</li>
+          <li>Workflow refinement</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Focus</h2>
+        <strong>Portfolio</strong>
+        <ul>
+          <li>Character settings</li>
+          <li>IP design systems</li>
+          <li>Companion Current</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="corner bl">
+    <a class="wordmark long" href="kinetic-portfolio.html" aria-label="Sustainable Quality Horizon home">
+      <span class="word-line"><span>SUSTAINABLE</span></span>
+      <span class="word-line"><span>QUALITY</span></span>
+      <span class="word-line"><span>HORIZON.</span></span>
+    </a>
+    <div class="meta">
+      <div><span class="lbl">Studio of</span>孙琦浩<br>AI Trainer</div>
+      <div><span class="lbl">Based</span>Beijing<br><a href="mailto:1559837185@163.com">1559837185@163.com</a></div>
+    </div>
+  </div>
+
+  <div class="corner tr">
+    <ul role="list" id="nav">
+      <li><span class="n">01</span><button type="button" aria-label="About" data-about-open>about</button></li>
+      <li><span class="n">02</span><a href="portfolio/journal.html">journal</a></li>
+      <li><span class="n">03</span><a href="https://github.com/krishnaveniespericueta-dev/17" target="_blank" rel="noopener noreferrer">github</a></li>
+      <li><span class="n">04</span><button type="button" aria-label="Weixin QR" data-weixin-open>weixin</button></li>
+      <li><span class="n">05</span><button type="button" aria-label="Telephone" data-tel-open>tel</button></li>
+    </ul>
+  </div>
+
+  <div class="corner br">
+    <div class="row"><b>design</b></div>
+    <div class="row"><b>&amp; build</b></div>
+    <small>Copyright &copy; 2026 Sustainable Quality Horizon. All rights reserved.</small>
+  </div>
+
+  <div class="contact-modal" id="weixin-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="weixin-title">
+    <div class="contact-dialog">
+      <button class="modal-close" type="button" aria-label="Close" data-modal-close></button>
+      <h2 id="weixin-title">weixin</h2>
+      <div class="qr-placeholder" aria-label="Weixin QR placeholder"><span>QR</span></div>
+      <span class="modal-note">Send me your QR image and I will replace this placeholder.</span>
+    </div>
+  </div>
+
+  <div class="contact-modal" id="tel-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="tel-title">
+    <div class="contact-dialog">
+      <button class="modal-close" type="button" aria-label="Close" data-modal-close></button>
+      <h2 id="tel-title">tel</h2>
+      <strong class="modal-value">Phone number pending</strong>
+      <span class="modal-note">Send me the phone number and I will put it here.</span>
+    </div>
+  </div>
+
+<script>
+  const stagePerspective = document.getElementById('stagePerspective');
+  const stageContainer = document.getElementById('stageContainer');
+  const projects = document.getElementById('projects');
+  const aboutPanel = document.getElementById('about');
+  const aboutOpenButtons = [...document.querySelectorAll('[data-about-open]')];
+  const aboutCloseButtons = [...document.querySelectorAll('[data-about-close]')];
+  const weixinModal = document.getElementById('weixin-modal');
+  const telModal = document.getElementById('tel-modal');
+  const weixinOpenButtons = [...document.querySelectorAll('[data-weixin-open]')];
+  const telOpenButtons = [...document.querySelectorAll('[data-tel-open]')];
+  const modalCloseButtons = [...document.querySelectorAll('[data-modal-close]')];
+  let projectItems = [...projects.querySelectorAll('.projectsLi')];
+  let loopHeight = innerHeight;
+  const loopBufferGroups = 3;
+  let target = 0;
+  let current = 0;
+  let lastPointerX = null;
+  let lastPointerY = null;
+  let hoveredProject = null;
+  let isNavigating = false;
+
+  buildProjectLoop();
+  requestAnimationFrame(() => document.body.classList.add('ready'));
+  setTimeout(() => {
+    document.body.classList.remove('loading');
+  }, 80);
+  setTimeout(() => {
+    stageContainer.style.opacity = 1;
+  }, 300);
+  setTimeout(() => {
+    document.body.classList.remove('intro');
+    resizeLoop();
+    recycleProjectItems(true);
+  }, 2900);
+
+  addEventListener('resize', resizeLoop, {passive:true});
+  addEventListener('wheel', moveProjects, {passive:false});
+  addEventListener('keydown', moveProjectsWithKeys);
+  addEventListener('pointermove', trackProjectHover, {passive:true});
+  addEventListener('mousemove', trackProjectHover, {passive:true});
+  addEventListener('pointerleave', clearProjectHover);
+  addEventListener('mouseleave', clearProjectHover);
+  addEventListener('blur', clearProjectHover);
+  projects.addEventListener('click', openProjectFromTitle);
+  aboutOpenButtons.forEach((button) => button.addEventListener('click', openAbout));
+  aboutCloseButtons.forEach((button) => button.addEventListener('click', closeAbout));
+  weixinOpenButtons.forEach((button) => button.addEventListener('click', () => openContactModal(weixinModal)));
+  telOpenButtons.forEach((button) => button.addEventListener('click', () => openContactModal(telModal)));
+  modalCloseButtons.forEach((button) => button.addEventListener('click', closeContactModals));
+  [weixinModal, telModal].forEach((modal) => {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeContactModals();
+    });
+  });
+  addEventListener('keydown', closeAboutWithKeys);
+  addEventListener('keydown', closeModalsWithKeys);
+
+  function openAbout(){
+    document.body.classList.add('about-open');
+    aboutPanel.setAttribute('aria-hidden', 'false');
+    clearProjectHover();
+  }
+
+  function closeAbout(){
+    document.body.classList.remove('about-open');
+    aboutPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  function closeAboutWithKeys(event){
+    if (event.key === 'Escape' && document.body.classList.contains('about-open')) closeAbout();
+  }
+
+  function openContactModal(modal){
+    if (!modal) return;
+    clearProjectHover();
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeContactModals(){
+    [weixinModal, telModal].forEach((modal) => {
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  function closeModalsWithKeys(event){
+    if (event.key === 'Escape') closeContactModals();
+  }
+
+  function buildProjectLoop(){
+    if (projects.dataset.loopReady) return;
+    const originals = [...projects.querySelectorAll('.projectsLi:not([aria-hidden="true"])')];
+    const before = document.createDocumentFragment();
+    const after = document.createDocumentFragment();
+
+    originals.forEach((item, index) => {
+      const link = item.querySelector('.proj');
+      item.dataset.projectIndex = String(index);
+      item.dataset.projectUrl = link ? link.getAttribute('href') : '';
+    });
+    for (let group = 0; group < loopBufferGroups; group += 1) {
+      originals.forEach((item) => before.appendChild(cloneProjectItem(item)));
+      originals.forEach((item) => after.appendChild(cloneProjectItem(item)));
+    }
+    projects.prepend(before);
+    projects.append(after);
+    projects.dataset.loopReady = 'true';
+    projectItems = [...projects.querySelectorAll('.projectsLi')];
+    resizeLoop();
+    current = loopHeight * loopBufferGroups;
+    target = current;
+    applyProjectsTransform();
+    recycleProjectItems();
+  }
+
+  function cloneProjectItem(item){
+    const clone = item.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.dataset.projectIndex = item.dataset.projectIndex;
+    clone.dataset.projectUrl = item.dataset.projectUrl;
+    clone.classList.remove('isHovered');
+    clone.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
+    return clone;
+  }
+
+  function openProjectFromTitle(event){
+    const item = event.target.closest('.projectsLi');
+    if (!item || !projects.contains(item)) return;
+    const projectUrl = item.dataset.projectUrl || item.querySelector('.proj')?.getAttribute('href');
+    if (!projectUrl) return;
+    event.preventDefault();
+    if (
+      isNavigating ||
+      document.body.classList.contains('intro') ||
+      document.body.classList.contains('outro') ||
+      document.body.classList.contains('about-open')
+    ) return;
+    startProjectTransition(item, projectUrl);
+  }
+
+  function startProjectTransition(selectedItem, projectUrl){
+    isNavigating = true;
+    target = current;
+    applyProjectsTransform();
+    clearProjectHover();
+    prepareProjectOutro(selectedItem);
+    selectedItem.classList.add('isSelected');
+    selectedItem.querySelector('.proj')?.blur();
+
+    setTimeout(() => {
+      document.body.classList.add('outro');
+    }, 250);
+    setTimeout(() => {
+      document.body.classList.add('loading');
+    }, 1900);
+    setTimeout(() => {
+      window.location.href = projectUrl;
+    }, 2050);
+  }
+
+  function prepareProjectOutro(selectedItem){
+    const items = [...projects.querySelectorAll('.projectsLi')];
+    items.forEach((item) => {
+      item.classList.remove('isSelected', 'isHovered');
+      item.style.removeProperty('--outro-delay');
+    });
+
+    const visibleItems = items
+      .map((item) => ({item, rect:item.getBoundingClientRect()}))
+      .filter(({rect}) => rect.bottom > -innerHeight * 0.18 && rect.top < innerHeight * 1.18)
+      .sort((a, b) => a.rect.top - b.rect.top);
+
+    visibleItems.forEach(({item}, index) => {
+      if (item === selectedItem) return;
+      const delay = Math.max(.1, .9 - index * .1);
+      item.style.setProperty('--outro-delay', `${delay.toFixed(2)}s`);
+    });
+  }
+
+  function resizeLoop(){
+    const firstSet = [...projects.querySelectorAll('.projectsLi:not([aria-hidden="true"])')];
+    const previousLoopHeight = loopHeight;
+    const nextLoopHeight = firstSet.reduce((height, item) => height + item.getBoundingClientRect().height, 0);
+    loopHeight = Math.max(1, nextLoopHeight || projects.scrollHeight / (loopBufferGroups * 2 + 1) || innerHeight);
+    if (projects.dataset.loopReady && previousLoopHeight > 1){
+      const scale = loopHeight / previousLoopHeight;
+      current *= scale;
+      target *= scale;
+    }
+    stageContainer.style.height = `${innerHeight}px`;
+  }
+
+  function moveProjects(event){
+    if (isNavigating || document.body.classList.contains('outro')) return;
+    if (document.body.classList.contains('about-open')) return;
+    if (document.body.classList.contains('intro')) return;
+    event.preventDefault();
+    target += event.deltaY * 0.95;
+    refreshHoverFromLastPointer();
+  }
+
+  function moveProjectsWithKeys(event){
+    if (isNavigating || document.body.classList.contains('outro')) return;
+    if (document.body.classList.contains('about-open')) return;
+    if (document.body.classList.contains('intro')) return;
+    if (event.target.closest && event.target.closest('a,button,input,textarea,select')) return;
+    const keyDistance = {
+      ArrowDown: 120,
+      ArrowUp: -120,
+      PageDown: innerHeight * 0.8,
+      PageUp: innerHeight * -0.8,
+      ' ': innerHeight * 0.8,
+      Home: -target,
+      End: loopHeight - (target % loopHeight)
+    }[event.key];
+    if (keyDistance === undefined) return;
+    event.preventDefault();
+    target += keyDistance;
+    refreshHoverFromLastPointer();
+  }
+
+  function trackProjectHover(event){
+    if (isNavigating || document.body.classList.contains('outro')) return;
+    lastPointerX = event.clientX;
+    lastPointerY = event.clientY;
+    refreshHoverFromLastPointer({force:true});
+  }
+
+  function refreshHoverFromLastPointer(options = {}){
+    if (lastPointerX === null || lastPointerY === null) return;
+    if (!options.force && hoveredProject && isPointerInsideProject(hoveredProject, 36)) return;
+    const element = document.elementFromPoint(lastPointerX, lastPointerY);
+    const item = element && element.closest ? element.closest('.projectsLi') : null;
+    if (!item || !projects.contains(item)) {
+      clearProjectHover();
+      return;
+    }
+    setProjectHover(item);
+  }
+
+  function isPointerInsideProject(item, padding = 0){
+    const rect = item.getBoundingClientRect();
+    return (
+      lastPointerX >= rect.left - padding &&
+      lastPointerX <= rect.right + padding &&
+      lastPointerY >= rect.top - padding &&
+      lastPointerY <= rect.bottom + padding
+    );
+  }
+
+  function setProjectHover(item){
+    if (isNavigating || document.body.classList.contains('intro') || document.body.classList.contains('outro')) return;
+    const projectIndex = item.dataset.projectIndex;
+    const hoveredIndex = hoveredProject && hoveredProject.dataset.projectIndex;
+    if (hoveredProject === item || (projectIndex && projectIndex === hoveredIndex)) {
+      hoveredProject = item;
+      return;
+    }
+    projectItems.forEach((project) => project.classList.remove('isHovered'));
+    projectItems.forEach((project) => {
+      if (project.dataset.projectIndex === projectIndex) project.classList.add('isHovered');
+    });
+    hoveredProject = item;
+    projects.classList.add('isHovering');
+  }
+
+  function clearProjectHover(){
+    if (!hoveredProject && !projects.classList.contains('isHovering')) return;
+    projectItems.forEach((project) => project.classList.remove('isHovered'));
+    hoveredProject = null;
+    projects.classList.remove('isHovering');
+  }
+
+  function applyProjectsTransform(){
+    const loopPosition = Math.round(current * 10000) / 10000;
+    projects.style.transform = `translate3d(0, ${-loopPosition}px, 0)`;
+  }
+
+  function recycleProjectItems(force = false){
+    if (!projects.dataset.loopReady || isNavigating || document.body.classList.contains('outro') || (!force && document.body.classList.contains('intro'))) return;
+    const buffer = Math.max(160, innerHeight * 0.28);
+    let guard = projectItems.length;
+
+    applyProjectsTransform();
+    while (guard > 0 && projects.firstElementChild.getBoundingClientRect().bottom < -buffer){
+      const first = projects.firstElementChild;
+      const height = first.getBoundingClientRect().height;
+      projects.appendChild(first);
+      current -= height;
+      target -= height;
+      applyProjectsTransform();
+      guard -= 1;
+    }
+
+    guard = projectItems.length;
+    while (guard > 0 && projects.firstElementChild.getBoundingClientRect().top > -buffer){
+      const last = projects.lastElementChild;
+      const height = last.getBoundingClientRect().height;
+      projects.prepend(last);
+      current += height;
+      target += height;
+      applyProjectsTransform();
+      guard -= 1;
+    }
+  }
+
+  function render(){
+    const distance = target - current;
+    const maxFrameStep = Math.max(80, innerHeight * 0.13);
+    const easedStep = distance * 0.09;
+    current += Math.max(-maxFrameStep, Math.min(maxFrameStep, easedStep));
+    if (Math.abs(target - current) < 0.01) current = target;
+
+    if (!isNavigating && !document.body.classList.contains('outro')) {
+      recycleProjectItems();
+      applyProjectsTransform();
+      if (Math.abs(target - current) > 0.01) refreshHoverFromLastPointer();
+    } else {
+      applyProjectsTransform();
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  resizeLoop();
+  render();
+</script>
+</body>
+</html>
