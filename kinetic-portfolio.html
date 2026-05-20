@@ -415,34 +415,39 @@
     backface-visibility:hidden;
   }
   .proj::before{
-    content:"/ " attr(data-info);
+    content:attr(data-top) "\A" attr(data-bottom);
     display:block;
-    white-space:pre;
+    white-space:pre-line;
     position:absolute;
-    top:3.35em;
-    left:-300px;
-    width:260px;
-    text-align:right;
+    top:.74em;
+    left:-2.08em;
+    width:1.75em;
+    text-align:left;
     color:var(--ink);
-    font-family:"akzidenz-grotesk","Space Mono",sans-serif;
-    font-size:clamp(11px,.72vw,14px);
-    font-weight:400;
+    font-family:Arial,"Microsoft YaHei",sans-serif;
+    font-size:clamp(24px,1.8vw,34px);
+    font-weight:700;
     letter-spacing:0;
-    line-height:1.2;
+    line-height:1.08;
     -webkit-text-stroke:0 transparent;
     z-index:3;
     pointer-events:none;
   }
   .proj::after{
-    content:none;
-    display:none;
+    content:"/";
+    display:block;
     position:absolute;
-    top:.23em;
-    left:-.3em;
-    width:2px;
-    height:.85em;
-    background:var(--ink);
-    transform:rotate(25deg);
+    top:.34em;
+    left:-1.28em;
+    width:auto;
+    height:auto;
+    background:transparent;
+    color:var(--ink);
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:clamp(88px,6.8vw,132px);
+    font-weight:400;
+    line-height:1;
+    -webkit-text-stroke:0 transparent;
     z-index:3;
     pointer-events:none;
   }
@@ -459,7 +464,7 @@
       -webkit-text-stroke-width:clamp(2px,.16vw,3px);
     }
     .proj::after{
-      width:2px;
+      width:auto;
     }
   }
   body:not(.intro):not(.outro) .projectsLi.isSelected .proj,
@@ -640,14 +645,14 @@
     <div class="stageContainer" id="stageContainer">
       <main class="stage" id="stage" aria-label="Selected work">
         <ul class="projects" id="projects">
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-01.html" data-info="品质地平线">Quality<br>Horizon</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-02.html" data-info="错误二七">Error<br>27</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-03.html" data-info="圣域设定集">Sanctuary<br>Codex</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-04.html" data-info="提示词研究">Prompt<br>Studies</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-05.html" data-info="AI训练笔记">AI Training<br>Notes</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-06.html" data-info="掌中宇宙">Cosmos<br>in Hand</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-07.html" data-info="伴舟电台">Companion<br>Current</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-08.html" data-info="案例实验">Case<br>Experiments</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-01.html" data-info="品质远景" data-top="品质" data-bottom="远景">Quality<br>Horizon</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-02.html" data-info="错误二七" data-top="错误" data-bottom="二七">Error<br>27</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-03.html" data-info="圣域秘典" data-top="圣域" data-bottom="秘典">Sanctuary<br>Codex</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-04.html" data-info="提示研究" data-top="提示" data-bottom="研究">Prompt<br>Studies</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-05.html" data-info="训练笔记" data-top="训练" data-bottom="笔记">AI Training<br>Notes</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-06.html" data-info="掌中宇宙" data-top="掌中" data-bottom="宇宙">Cosmos<br>in Hand</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-07.html" data-info="伴舟电台" data-top="伴舟" data-bottom="电台">Companion<br>Current</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-08.html" data-info="案例实验" data-top="案例" data-bottom="实验">Case<br>Experiments</a></div></li>
         </ul>
       </main>
     </div>
