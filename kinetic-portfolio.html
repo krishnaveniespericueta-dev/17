@@ -415,20 +415,20 @@
     backface-visibility:hidden;
   }
   .proj::before{
-    content:none;
-    display:none;
+    content:"/ " attr(data-info);
+    display:block;
     white-space:pre;
     position:absolute;
-    top:3.7em;
-    left:-315px;
-    width:250px;
+    top:3.35em;
+    left:-300px;
+    width:260px;
     text-align:right;
     color:var(--ink);
     font-family:"akzidenz-grotesk","Space Mono",sans-serif;
-    font-size:.7vw;
+    font-size:clamp(11px,.72vw,14px);
     font-weight:400;
     letter-spacing:0;
-    line-height:1em;
+    line-height:1.2;
     -webkit-text-stroke:0 transparent;
     z-index:3;
     pointer-events:none;
@@ -640,14 +640,14 @@
     <div class="stageContainer" id="stageContainer">
       <main class="stage" id="stage" aria-label="Selected work">
         <ul class="projects" id="projects">
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-01.html" data-info="2026">Quality<br>Horizon</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-02.html" data-info="2026">Error<br>27</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-03.html" data-info="2025">Sanctuary<br>Codex</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-04.html" data-info="2025">Prompt<br>Studies</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-05.html" data-info="2025">AI Training<br>Notes</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-06.html" data-info="2024">Cosmos<br>in Hand</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-07.html" data-info="2024">Companion<br>Current</a></div></li>
-          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-08.html" data-info="2024">Case<br>Experiments</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-01.html" data-info="品质地平线">Quality<br>Horizon</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-02.html" data-info="错误二七">Error<br>27</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-03.html" data-info="圣域设定集">Sanctuary<br>Codex</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-04.html" data-info="提示词研究">Prompt<br>Studies</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-05.html" data-info="AI训练笔记">AI Training<br>Notes</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-06.html" data-info="掌中宇宙">Cosmos<br>in Hand</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-07.html" data-info="伴舟电台">Companion<br>Current</a></div></li>
+          <li class="projectsLi"><div class="projectContainer"><a class="proj" href="portfolio/project-08.html" data-info="案例实验">Case<br>Experiments</a></div></li>
         </ul>
       </main>
     </div>
