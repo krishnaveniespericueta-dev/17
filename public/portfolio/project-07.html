@@ -19,12 +19,12 @@
         <p class="kicker">2026 / 私人 AI 电台</p>
         <h1>Companion<br>Current</h1>
       </div>
-      <p class="summary">Companion Current 是“伴舟”的作品集英文名。它是一个私人 AI 电台应用，内置名为“小柒”的 AI 播报员，会结合音乐品味、日常节律和情绪规则进行选曲与温柔串场。</p>
+      <p class="summary">Companion Current 是“伴舟”的作品集英文名。它不是通用播放器，而是一个只服务于个人习惯的 AI 电台：由“小柒”担任私人播报员，根据音乐品味、日常节律、情绪规则、当前时间和播放记忆，自动组织歌曲队列与温柔串场。</p>
     </section>
     <section class="meta" aria-label="项目详情">
       <div><span>角色</span><b>产品设计与 AI 工作流</b></div>
-      <div><span>范围</span><b>Electron 应用、音乐路由、TTS</b></div>
-      <div><span>状态</span><b>桌面端原型</b></div>
+      <div><span>范围</span><b>Electron、音乐检索、LLM 路由、TTS</b></div>
+      <div><span>状态</span><b>可运行桌面端原型</b></div>
     </section>
     <section class="radio-showcase" aria-label="Companion Current 产品概览">
       <div class="radio-device">
@@ -39,24 +39,101 @@
         </div>
         <div class="radio-queue">
           <span>品味种子</span>
-          <b>陈奕迅 / 深夜爵士 / Bonobo / Tycho / 华语民谣</b>
+          <b>陈奕迅 / 华语抒情 / 深夜爵士 / Bonobo / Tycho / 独立民谣</b>
         </div>
       </div>
       <div class="radio-panel">
         <h2>Companion<br>Current</h2>
-        <p>伴舟不是一个通用播放器，而是一个更像“小型私人电台”的桌面应用。它会记住用户的音乐品味、日常节律和情绪规则，让小柒在歌曲之间用接近深夜陪伴者的语气自然播报。</p>
+        <p>伴舟的核心不是“找歌”，而是把“此刻适合听什么”做成一套可运行的判断系统。页面里的音频样例来自 Fish Audio 语音合成；如果云端语音不可用，应用会自动回落到本地浏览器语音，保证播报不中断。</p>
         <div class="feature-list">
-          <div><span>01</span><b>为“小柒”设定 AI 播报员人格，用结构化 JSON 控制选曲、串场和播报内容。</b></div>
-          <div><span>02</span><b>记录音乐品味：华语抒情、深夜爵士、独立民谣、J-Pop、专注歌单等。</b></div>
-          <div><span>03</span><b>根据时间、天气、心情和日常节律，区分早晨、专注、傍晚和深夜的播放策略。</b></div>
-          <div><span>04</span><b>使用 Electron 构建桌面端外壳，包含黑胶界面、歌词、队列、可视化和 TTS 缓存。</b></div>
+          <div><span>01</span><b>用“小柒”人格提示词约束语气，让播报像贴着十七耳朵说的私人电台。</b></div>
+          <div><span>02</span><b>读取 taste、routines、mood-rules，把品味、时间段和情绪策略组合进推荐上下文。</b></div>
+          <div><span>03</span><b>要求模型返回固定 JSON：say、play、reason、segue，便于后端稳定接入选曲链路。</b></div>
+          <div><span>04</span><b>Electron 桌面端呈现黑胶、歌词、队列、语音字幕、可视化和播放控制。</b></div>
         </div>
         <audio class="radio-audio" controls src="companion-current-sample-v2.wav"></audio>
       </div>
     </section>
+    <section class="radio-context" aria-label="伴舟输入语料">
+      <div class="radio-section-head">
+        <span>Context Inputs</span>
+        <div>
+          <h2>把个人资料变成电台判断</h2>
+          <p>伴舟的推荐不是从空白提示词开始。它会把固定人格、用户品味、作息、情绪规则、天气时间和最近播放记忆拼成上下文，让每次推荐都尽量贴近真实场景。</p>
+        </div>
+      </div>
+      <div class="radio-context-grid">
+        <article>
+          <span>taste.md</span>
+          <h3>音乐品味</h3>
+          <p>核心偏好是陈奕迅、华语抒情、故事感歌词、情感投入明显的版本，以及不过度堆砌的编曲空间。</p>
+        </article>
+        <article>
+          <span>routines.md</span>
+          <h3>日常节律</h3>
+          <p>早晨轻快、上午专注、午休舒缓、傍晚给情绪出口，深夜则降低密度，不在 00:00 之后继续推新歌。</p>
+        </article>
+        <article>
+          <span>mood-rules.md</span>
+          <h3>情绪规则</h3>
+          <p>雨天走安静抒情，晴天更明朗；低落时先共情再慢慢抬升，烦躁时避开复杂编曲和过快节奏。</p>
+        </article>
+      </div>
+    </section>
+    <section class="radio-flow" aria-label="伴舟工作流">
+      <div class="radio-section-head">
+        <span>System Flow</span>
+        <div>
+          <h2>从一句话到一段电台</h2>
+          <p>应用把用户输入和定时任务都当作“电台场景”处理：先生成可搜索歌单，再解析音乐链接，最后把串场语音排进播放链。</p>
+        </div>
+      </div>
+      <ol class="radio-flow-steps">
+        <li><span>01</span><b>触发</b><p>用户输入、启动推荐、整点检查、早间节目或队列播完都会触发路由。</p></li>
+        <li><span>02</span><b>组装上下文</b><p>读取人格、品味、作息、情绪规则、天气、时间和最近已播歌曲。</p></li>
+        <li><span>03</span><b>生成 JSON</b><p>DeepSeek 输出播报文字与 3-5 首候选歌曲，后端清洗噪声并去重。</p></li>
+        <li><span>04</span><b>解析歌曲</b><p>通过网易云接口搜索与获取音频链接，失败时使用本地种子兜底。</p></li>
+        <li><span>05</span><b>语音合成</b><p>Fish Audio 生成小柒语音，写入 TTS 缓存；超时或失败则用本地语音兜底。</p></li>
+        <li><span>06</span><b>播放与续播</b><p>WebSocket 推送当前歌曲、队列和语音任务，在歌曲尾声前预取下一轮。</p></li>
+      </ol>
+    </section>
+    <section class="radio-desktop" aria-label="伴舟桌面端界面">
+      <div class="radio-window">
+        <div class="radio-window-top"><span></span><b>伴舟</b><i></i></div>
+        <div class="radio-window-disc">
+          <div class="radio-window-record"></div>
+          <div class="radio-window-arm"></div>
+        </div>
+        <div class="radio-window-song">
+          <strong>小柒正在播报</strong>
+          <span>“这几首先往更贴耳朵的方向靠。”</span>
+        </div>
+        <div class="radio-window-lyrics">
+          <p>歌词滚动区域</p>
+          <p>队列预告与语音字幕共用节奏</p>
+        </div>
+        <div class="radio-window-controls">
+          <button aria-label="back"></button>
+          <button aria-label="play"></button>
+          <button aria-label="dislike"></button>
+          <button aria-label="next"></button>
+        </div>
+      </div>
+      <div class="radio-desktop-copy">
+        <span>Desktop Prototype</span>
+        <h2>桌面端像一个常驻的小型电台窗口</h2>
+        <p>界面保留黑胶、唱臂、歌词、队列和输入框，但视觉尽量轻：它不抢走正在学习或工作的注意力，只在切歌、播报和需要反馈时出现。</p>
+        <ul>
+          <li>播放时黑胶旋转，唱臂进入播放角度。</li>
+          <li>小柒播报时音乐会自动压低音量，语音结束后平滑恢复。</li>
+          <li>用户点“不喜欢”会写回品味文件，后续推荐避开类似版本。</li>
+          <li>最近已播放歌曲进入记忆窗口，防止同一轮反复推荐。</li>
+        </ul>
+      </div>
+    </section>
     <section class="copy-block">
       <h2>产品<br>逻辑</h2>
-      <p>这个系统把网易云音乐搜索、播放历史、自定义歌单种子、情绪规则和语音合成连接起来。目标不只是播放歌曲，而是让每一次过渡都像是为某一个具体的人提前准备好的。</p>
+      <p>这个系统把网易云音乐搜索、播放历史、自定义歌单种子、情绪规则、定时任务和语音合成连接起来。目标不只是播放歌曲，而是让每一次过渡都像是为某一个具体的人提前准备好的。</p>
     </section>
     <nav class="project-nav" aria-label="项目导航">
       <a href="project-06.html">Previous</a>
