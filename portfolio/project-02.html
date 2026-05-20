@@ -147,9 +147,9 @@
   </main>
 <script>
   setTimeout(() => document.body.classList.remove('loading'), 620);
-  const syncErrorScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 120);
-  window.addEventListener('scroll', syncErrorScroll, { passive: true });
-  syncErrorScroll();
+  const syncProjectScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 120);
+  window.addEventListener('scroll', syncProjectScroll, { passive: true });
+  syncProjectScroll();
 </script>
 </body>
 </html>

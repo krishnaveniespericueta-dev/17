@@ -425,10 +425,10 @@ body.work-page:not(.loading) h1{
   font-size:19px;
   line-height:1.62;
 }
-.error-project .logo{
+body.work-page .logo{
   transition:opacity .25s ease,transform .25s ease;
 }
-.error-project.is-scrolled .logo{
+body.work-page.is-scrolled .logo{
   opacity:0;
   transform:translateY(-12px);
   pointer-events:none;
