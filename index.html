@@ -350,7 +350,6 @@
   .projectsLi{
     transform-style:preserve-3d;
     pointer-events:auto;
-    cursor:pointer;
   }
   .projectContainer{
     transform:rotateY(-45deg) translateZ(0) scale(1);
@@ -419,9 +418,9 @@
     display:block;
     white-space:pre-line;
     position:absolute;
-    top:.74em;
-    left:-2.08em;
-    width:1.75em;
+    top:.68em;
+    left:-2.15em;
+    width:2.4em;
     text-align:left;
     color:var(--ink);
     font-family:Arial,"Microsoft YaHei",sans-serif;
@@ -437,14 +436,14 @@
     content:"/";
     display:block;
     position:absolute;
-    top:.34em;
-    left:-1.28em;
+    top:.24em;
+    left:-1.92em;
     width:auto;
     height:auto;
     background:transparent;
     color:var(--ink);
     font-family:Arial,Helvetica,sans-serif;
-    font-size:clamp(88px,6.8vw,132px);
+    font-size:clamp(52px,3.9vw,74px);
     font-weight:400;
     line-height:1;
     -webkit-text-stroke:0 transparent;
@@ -867,9 +866,10 @@
   }
 
   function openProjectFromTitle(event){
-    const item = event.target.closest('.projectsLi');
+    const link = event.target.closest('.proj') || getProjectLinkFromPoint(event.clientX, event.clientY);
+    const item = link && link.closest('.projectsLi');
     if (!item || !projects.contains(item)) return;
-    const projectUrl = item.dataset.projectUrl || item.querySelector('.proj')?.getAttribute('href');
+    const projectUrl = item.dataset.projectUrl || link.getAttribute('href');
     if (!projectUrl) return;
     event.preventDefault();
     if (
@@ -971,9 +971,9 @@
 
   function refreshHoverFromLastPointer(options = {}){
     if (lastPointerX === null || lastPointerY === null) return;
-    if (!options.force && hoveredProject && isPointerInsideProject(hoveredProject, 36)) return;
-    const element = document.elementFromPoint(lastPointerX, lastPointerY);
-    const item = element && element.closest ? element.closest('.projectsLi') : null;
+    if (!options.force && hoveredProject && isPointerInsideProjectLink(hoveredProject, 6)) return;
+    const link = getProjectLinkFromPoint(lastPointerX, lastPointerY);
+    const item = link && link.closest('.projectsLi');
     if (!item || !projects.contains(item)) {
       clearProjectHover();
       return;
@@ -981,8 +981,20 @@
     setProjectHover(item);
   }
 
-  function isPointerInsideProject(item, padding = 0){
-    const rect = item.getBoundingClientRect();
+  function getProjectLinkFromPoint(x, y){
+    if (x === null || y === null) return null;
+    const stack = document.elementsFromPoint ? document.elementsFromPoint(x, y) : [document.elementFromPoint(x, y)];
+    for (const element of stack) {
+      const link = element && element.closest ? element.closest('.proj') : null;
+      if (link && projects.contains(link)) return link;
+    }
+    return null;
+  }
+
+  function isPointerInsideProjectLink(item, padding = 0){
+    const link = item.querySelector('.proj');
+    if (!link) return false;
+    const rect = link.getBoundingClientRect();
     return (
       lastPointerX >= rect.left - padding &&
       lastPointerX <= rect.right + padding &&
