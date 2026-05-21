@@ -758,7 +758,7 @@
   </section>
 
   <div class="corner bl">
-    <a class="wordmark long" href="index.html" aria-label="Sustainable Quality Horizon home">
+    <a class="wordmark long" href="/" aria-label="Sustainable Quality Horizon home">
       <span class="word-line"><span>SUSTAINABLE</span></span>
       <span class="word-line"><span>QUALITY</span></span>
       <span class="word-line"><span>HORIZON.</span></span>
@@ -804,6 +804,11 @@
   </div>
 
 <script>
+  if (/^https?:$/.test(location.protocol) && /\/index\.html$/i.test(location.pathname)) {
+    const cleanPath = location.pathname.replace(/index\.html$/i, '');
+    history.replaceState(null, '', cleanPath + location.search + location.hash);
+  }
+
   const stagePerspective = document.getElementById('stagePerspective');
   const stageContainer = document.getElementById('stageContainer');
   const projects = document.getElementById('projects');
