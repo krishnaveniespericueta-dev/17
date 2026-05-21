@@ -1004,6 +1004,103 @@ body.work-page.is-scrolled .logo{
   font-size:16px;
   line-height:1.6;
 }
+.journal-page .hero{
+  grid-template-columns:minmax(0,1fr) minmax(420px,34vw);
+  min-height:56vh;
+}
+.journal-page h1{
+  font-size:clamp(76px,8vw,148px);
+}
+.journal-page .summary{
+  max-width:38rem;
+  font-size:19px;
+  line-height:1.52;
+}
+.journal-intro{
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr);
+  gap:4vw;
+  margin:4vh 0 8vh;
+  padding-top:1.4rem;
+  border-top:1px solid rgba(5,0,9,.2);
+}
+.journal-intro span{
+  color:var(--muted);
+  font-family:"Space Mono",monospace;
+  font-size:12px;
+}
+.journal-intro p{
+  margin:0;
+  max-width:58rem;
+  color:rgba(5,0,9,.78);
+  font-size:20px;
+  line-height:1.65;
+}
+.journal-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:2vw;
+  margin-top:6vh;
+}
+.journal-entry{
+  min-height:320px;
+  padding:28px;
+  border-top:2px solid var(--ink);
+  background:rgba(72,1,255,.05);
+}
+.journal-entry-featured{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:minmax(280px,.44fr) minmax(0,1fr);
+  column-gap:4vw;
+  min-height:390px;
+}
+.journal-entry span{
+  display:block;
+  margin-bottom:1.2rem;
+  color:var(--muted);
+  font-family:"Space Mono",monospace;
+  font-size:12px;
+  line-height:1.4;
+}
+.journal-entry h2{
+  margin:0 0 1.2rem;
+  font-family:"Druk Wide Web",Arial,Helvetica,sans-serif;
+  font-size:clamp(26px,2.45vw,48px);
+  line-height:1.08;
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+.journal-entry p{
+  margin:0;
+  max-width:50rem;
+  color:rgba(5,0,9,.76);
+  font-size:16px;
+  line-height:1.72;
+}
+.journal-entry p + p{
+  margin-top:1rem;
+}
+.journal-entry ul{
+  display:grid;
+  gap:.32rem;
+  margin:1.2rem 0 0;
+  padding:0;
+  list-style:none;
+  color:rgba(5,0,9,.78);
+  font-size:15px;
+  line-height:1.75;
+}
+.journal-entry li{
+  position:relative;
+  padding-left:1.2rem;
+}
+.journal-entry li::before{
+  content:"/";
+  position:absolute;
+  left:0;
+  color:var(--violet);
+}
 .copy-block{
   display:grid;
   grid-template-columns:1fr 1fr;

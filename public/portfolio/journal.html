@@ -1,31 +1,82 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#4801ff">
-<title>Journal | 17 SHIQI</title>
-<link rel="stylesheet" href="project-style.css">
+<title>训练笔记 / Journal | 17 SHIQI</title>
+<link rel="stylesheet" href="project-style.css?v=journal-20260521">
 </head>
-<body>
+<body class="work-page loading journal-page">
   <header class="topbar">
-    <a class="logo" href="/">Studio<br>Name.</a>
+    <a class="logo" href="/">SQH<br>Portfolio</a>
     <a class="back" href="/" aria-label="Back to portfolio"></a>
   </header>
   <main class="project">
     <section class="hero">
       <div>
-        <p class="kicker">Journal / Placeholder</p>
-        <h1>Journal</h1>
+        <p class="kicker">Journal / 训练笔记</p>
+        <h1>Training<br>Notes</h1>
       </div>
-      <p class="summary">This local page is reserved for your writing, process notes, updates, or project essays.</p>
+      <p class="summary">这里记录我在 AI 训练、模型评测、AIGC 数据规则和 IP 设计中的方法沉淀。它不是正式论文，也不是随笔博客，而是把项目过程里的判断、失败样本、规则迭代和设计逻辑整理成可以复用的工作笔记。</p>
     </section>
-    <section class="media-grid" aria-label="Journal placeholders">
-      <div class="placeholder large" data-label="Article list placeholder"></div>
+
+    <section class="journal-intro" aria-label="Journal overview">
+      <span>Working Method</span>
+      <p>这些笔记对应作品集里的真实项目：一部分来自模型评测和标注管理经验，一部分来自 Error 27、Sanctuary Codex 和个人电台的设计过程。它们共同说明一件事：好的作品不只依赖灵感，也依赖可以复盘、可以迁移的规则。</p>
+    </section>
+
+    <section class="journal-list" aria-label="Journal entries">
+      <article class="journal-entry">
+        <span>01 / 模型评测</span>
+        <h2>如何把审美判断变成模型评测维度</h2>
+        <p>从空间结构、透视、材质、光影、风格一致性和主体关系出发，把“好不好看”拆成可讨论、可打分、可复核的质量维度，让设计背景真正参与模型评测。</p>
+      </article>
+
+      <article class="journal-entry">
+        <span>02 / Prompt 测试集</span>
+        <h2>Prompt 测试集不是灵感清单，而是评测工具</h2>
+        <p>基础集负责保证版本之间可对比，专项集负责验证边界能力。写 Prompt 时不只追求画面效果，更要控制变量、覆盖典型场景，并为 SBS 横向评测保留稳定条件。</p>
+      </article>
+
+      <article class="journal-entry">
+        <span>03 / Badcase 归因</span>
+        <h2>从“图不好看”到“问题可定位”</h2>
+        <p>失败样本需要被重新命名：主体错误、透视错乱、材质混淆、风格漂移、信息遗漏、关系不成立。只有问题被归类，下一轮规则和数据才知道该往哪里补。</p>
+      </article>
+
+      <article class="journal-entry journal-entry-featured">
+        <span>04 / 世界设定</span>
+        <h2>Sanctuary Codex：世界观从气质到系统的整理过程</h2>
+        <p>这个世界观不是从单个角色开始，而是先确定“冰河纪元”的总体气质：寒冷、信仰、技术边界和生存压力。随后把这个气质拆成可展示的系统文件，包括圣域存续疆图、异常能力体系、日冕圣廷、白寂修会与破晓武装三组阵营。</p>
+        <p>整理时我把主视觉放在最前面，用一张大图先建立世界温度和冲突方向；再按系统、角色、阵营与场景分区，让观众先理解规则，再进入人物关系。角色设定按照阵营排序，是为了让人物不只是单张设定图，而能回到政治结构、能力来源和叙事立场里。</p>
+        <ul>
+          <li>先用世界名称和核心概念建立入口。</li>
+          <li>用主视觉承接整体气氛和三方张力。</li>
+          <li>用地图、能力体系和阵营视觉补足底层规则。</li>
+          <li>用角色档案与关键场景验证这个世界能否继续讲故事。</li>
+        </ul>
+      </article>
+
+      <article class="journal-entry">
+        <span>05 / IP 设计</span>
+        <h2>Error 27：一个角色如何从情绪状态长出来</h2>
+        <p>“表达失败，请稍后再试”先是一个情绪状态，再变成角色设定、社交应用界面、状态头像和表情包逻辑。IP 设计的关键不是只做形象，而是让角色能在不同媒介里保持同一种语言。</p>
+      </article>
+
+      <article class="journal-entry">
+        <span>06 / 个人电台</span>
+        <h2>个人电台：把陪伴感做成产品逻辑</h2>
+        <p>Companion Current 不是通用播放器，而是围绕个人习惯、情绪节律和音乐记忆组织的电台体验。它的重点不是“播放”，而是让 AI 播报员知道什么时候出现、说什么、如何不打扰。</p>
+      </article>
     </section>
   </main>
+<script>
+  setTimeout(() => document.body.classList.remove('loading'), 620);
+  const syncProjectScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 120);
+  window.addEventListener('scroll', syncProjectScroll, { passive: true });
+  syncProjectScroll();
+</script>
 </body>
 </html>
-
-
