@@ -531,28 +531,36 @@
     visibility:hidden;
     pointer-events:none;
     transform:translate3d(-4vw,28px,0) skewY(-.65deg);
-    transition:opacity .72s cubic-bezier(.16,1,.3,1),transform .72s cubic-bezier(.16,1,.3,1),visibility 0s linear .72s;
+    transition:opacity .72s cubic-bezier(.16,1,.3,1),transform .72s cubic-bezier(.16,1,.3,1),visibility 0s linear;
   }
   body.about-open .about-panel,
   body.about-closing .about-panel{
     visibility:visible;
-    transition-delay:0s;
   }
   body.about-open .about-panel{
     opacity:1;
     pointer-events:auto;
     transform:translate3d(0,0,0) skewY(0deg);
+    transition-delay:0s;
   }
   body.about-closing .about-panel{
     opacity:0;
+    pointer-events:none;
     transform:translate3d(-2vw,18px,0) skewY(-.45deg);
+    transition:opacity .4s cubic-bezier(.55,.055,.675,.19) .16s,transform .46s cubic-bezier(.55,.055,.675,.19) .16s,visibility 0s linear .68s;
   }
-  body.about-open .stagePerspective,
-  body.about-closing .stagePerspective{
+  body.about-open .stagePerspective{
     pointer-events:none;
     opacity:.38;
     filter:blur(2px);
     transform:translate3d(1.4vw,0,0) scale(.985);
+  }
+  body.about-closing .stagePerspective{
+    pointer-events:none;
+    opacity:1;
+    filter:blur(0);
+    transform:translate3d(0,0,0) scale(1);
+    transition:opacity .44s cubic-bezier(.22,1,.36,1) .22s,filter .44s cubic-bezier(.22,1,.36,1) .22s,transform .44s cubic-bezier(.22,1,.36,1) .22s;
   }
   .about-close{
     position:fixed;
@@ -586,6 +594,12 @@
     border-color:var(--paper);
     opacity:1;
     transform:scale(1.04);
+  }
+  body.about-closing .about-close{
+    border-color:rgba(242,242,242,0);
+    opacity:0;
+    transform:scale(.82) rotate(-10deg);
+    transition:border-color .22s ease-out,opacity .22s ease-out,transform .22s ease-out;
   }
   .about-panel h1{
     max-width:58rem;
@@ -635,8 +649,13 @@
   body.about-closing .about-panel h1,
   body.about-closing .about-panel p,
   body.about-closing .details > div{
-    transition-delay:0s;
+    transition-timing-function:cubic-bezier(.55,.055,.675,.19);
   }
+  body.about-closing .details > div:nth-child(3){transition-delay:0s}
+  body.about-closing .details > div:nth-child(2){transition-delay:.04s}
+  body.about-closing .details > div:nth-child(1){transition-delay:.08s}
+  body.about-closing .about-panel p{transition-delay:.12s}
+  body.about-closing .about-panel h1{transition-delay:.16s}
   .details h2{
     color:rgba(242,242,242,.58);
     font-family:"Space Mono",monospace;
@@ -763,7 +782,6 @@
   <div class="corner br">
     <div class="row"><b>design</b></div>
     <div class="row"><b>&amp; build</b></div>
-    <small>Copyright &copy; 2026 Sustainable Quality Horizon. All rights reserved.</small>
   </div>
 
   <div class="contact-modal" id="weixin-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="weixin-title">
@@ -806,7 +824,7 @@
   let hoveredProject = null;
   let isNavigating = false;
   let aboutCloseTimer = null;
-  const aboutTransitionMs = 740;
+  const aboutTransitionMs = 680;
 
   buildProjectLoop();
   requestAnimationFrame(() => document.body.classList.add('ready'));
