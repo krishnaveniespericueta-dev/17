@@ -437,7 +437,7 @@ body {
     </div>
     <div class="case-body">
       <p>这是一个把手势识别、三维渲染和宇宙意象压缩到浏览器里的交互装置。出发点是一个简单的问题——<strong class="violet-hl">如果手势可以操控一个真实存在的宇宙，那会是什么感觉？</strong>不是控制台、不是仪表盘，而是一段悬浮的星系，等你伸手让它运行。</p>
-      <p>摄像头开启后，浏览器在本地推理 21 个手部关键点，画面不外传、不录制、不上传，也不识别人脸。识别结果被抽象成单手 5 个手势：移动、捏合、张掌、握拳、挥手，对应宇宙装置的 5 种状态。鼠标和模拟器为降级输入兜底。</p>
+      <p>摄像头开启后，浏览器在本地推理 21 个手部关键点，画面不外传、不录制、不上传，也不识别人脸。识别结果被抽象成单手输入：移动控制方向，手掌开合控制缩放，张掌强化轨道，握拳触发脉冲，挥手制造扰动。鼠标和模拟器为降级输入兜底。</p>
       <p>在介绍页，宇宙是一张静态的星仪草图；点击「进入装置」后，页面切入深空，作品进入真实的三维运行状态。从「档案」到「现场」的切换，是这个项目的核心节奏。</p>
     </div>
   </div>
@@ -449,7 +449,7 @@ body {
       <p class="panel-title">手势 → 装置</p>
       <table class="gesture-table">
         <tr><td class="g-cn">移动</td><td class="g-en">ROTATE</td><td class="g-note">旋转宇宙</td></tr>
-        <tr><td class="g-cn">捏合</td><td class="g-en">PINCH</td><td class="g-note">缩放装置</td></tr>
+        <tr><td class="g-cn">开合</td><td class="g-en">PALM</td><td class="g-note">缩放装置</td></tr>
         <tr><td class="g-cn">张掌</td><td class="g-en">EXPAND</td><td class="g-note">展开结构</td></tr>
         <tr><td class="g-cn">握拳</td><td class="g-en">PULSE</td><td class="g-note">恒星脉冲</td></tr>
         <tr><td class="g-cn">挥手</td><td class="g-en">DISTURB</td><td class="g-note">星群扰动</td></tr>
@@ -500,7 +500,7 @@ body {
 
   <div class="lab-hints" id="lab-hints">
     单手挥动 = 旋转<br>
-    捏合 = 缩放<br>
+    开掌 / 收掌 = 缩放<br>
     张掌 = 展开<br>
     握拳 = 脉冲<br>
     挥手 = 扰动
@@ -514,8 +514,8 @@ body {
 
   <div class="dev-panel" id="dev-panel">
     <button class="dev-btn" data-gesture="rotate">rotate</button>
-    <button class="dev-btn" data-gesture="pinch">pinch</button>
-    <button class="dev-btn" data-gesture="openPalm">palm</button>
+    <button class="dev-btn" data-gesture="closePalm">close</button>
+    <button class="dev-btn" data-gesture="openPalm">open</button>
     <button class="dev-btn" data-gesture="fist">fist</button>
     <button class="dev-btn" data-gesture="wave">wave</button>
     <button class="dev-btn" data-gesture="none">reset</button>
@@ -543,11 +543,14 @@ class GestureSource extends EventTarget {
     this.state = {
       source: 'mouse', cameraStatus: 'idle', handDetected: false,
       gesture: 'none', x: 0, y: 0, openness: 0.5, velocity: 0, velocityX: 0,
-      confidence: 0, timestamp: 0
+      zoomIntent: 'hold', scale: 1, confidence: 0, timestamp: 0
     };
     this.zoomLevel = 0.5;
     this._wristHistory = [];
-    this._openBaseline = -1; // adaptive neutral point, -1 = not yet calibrated
+    this._opennessSmoothed = null;
+    this._lastOpenness = null;
+    this._zoomVelocity = 0;
+    this._zoomIntent = 'hold';
     this._gestureBuffer = [];
     this._stableGesture = 'none';
     this._stableCount = 0;
@@ -613,10 +616,14 @@ class GestureSource extends EventTarget {
       this.state.x = (lm[9].x - 0.5) * 2;
       this.state.y = (lm[9].y - 0.5) * 2;
       this.state.timestamp = time;
-      const raw = this._classifyGesture(lm, time);
-      this._stabilize(raw);
-      this.state.gesture = this._stableGesture;
       this._computeOpenness(lm);
+      const raw = this._classifyGesture(lm, time);
+      if (this._zoomIntent !== 'hold') {
+        this.state.gesture = this._zoomIntent;
+      } else {
+        this._stabilize(raw);
+        this.state.gesture = this._stableGesture;
+      }
       this._computeVelocity(lm, time);
     } else {
       this.state.handDetected = false;
@@ -631,11 +638,11 @@ class GestureSource extends EventTarget {
     const tips = [4, 8, 12, 16, 20];
     const tipDists = tips.map(i => this._dist(lm[i], lm[0]));
 
-    // Fist with hysteresis — easy to enter, hard to exit
+    // Fist with hysteresis. Keep it stricter so a closing palm can still drive zoom.
     if (this._inFist) {
-      if (tipDists.some(d => d > palmW * 0.75)) this._inFist = false;
+      if (tipDists.some(d => d > palmW * 0.62)) this._inFist = false;
       else return 'fist';
-    } else if (tipDists.every(d => d < palmW * 0.55)) {
+    } else if (tipDists.every(d => d < palmW * 0.38)) {
       this._inFist = true;
       return 'fist';
     }
@@ -652,28 +659,39 @@ class GestureSource extends EventTarget {
   }
 
   _computeOpenness(lm) {
-    const palmW = this._dist(lm[0], lm[5]);
-    // Openness: average fingertip-to-wrist distance, normalized
-    const tips = [8, 12, 16, 20];
-    const avgDist = tips.reduce((sum, i) => sum + this._dist(lm[i], lm[0]), 0) / tips.length;
-    this.state.openness = clamp((avgDist / palmW - 0.5) / 1.0, 0, 1);
+    const palmW = Math.max(this._dist(lm[0], lm[5]), 0.0001);
+    const fingers = [
+      { tip: 8, mcp: 5 },
+      { tip: 12, mcp: 9 },
+      { tip: 16, mcp: 13 },
+      { tip: 20, mcp: 17 }
+    ];
+    const extension = fingers.reduce((sum, f) => sum + this._dist(lm[f.tip], lm[f.mcp]) / palmW, 0) / fingers.length;
+    const wristReach = fingers.reduce((sum, f) => sum + this._dist(lm[f.tip], lm[0]) / palmW, 0) / fingers.length;
+    const rawOpenness = clamp(((extension * 0.7 + wristReach * 0.3) - 0.82) / 1.05, 0, 1);
 
-    // Adaptive baseline: track user's natural resting openness via slow EMA
-    if (this._openBaseline < 0) {
-      this._openBaseline = this.state.openness; // first reading = initial calibration
-    } else {
-      this._openBaseline = this._openBaseline * 0.995 + this.state.openness * 0.005;
+    this._opennessSmoothed = this._opennessSmoothed === null
+      ? rawOpenness
+      : this._opennessSmoothed * 0.72 + rawOpenness * 0.28;
+
+    const delta = this._lastOpenness === null ? 0 : this._opennessSmoothed - this._lastOpenness;
+    this._lastOpenness = this._opennessSmoothed;
+    this.state.openness = this._opennessSmoothed;
+
+    const deadDelta = 0.006;
+    const zoomStep = Math.abs(delta) > deadDelta ? clamp(-delta * 0.9, -0.035, 0.035) : 0;
+    this._zoomVelocity = this._zoomVelocity * 0.74 + zoomStep * 0.26;
+
+    if (Math.abs(this._zoomVelocity) > 0.0008) {
+      this.zoomLevel = clamp(this.zoomLevel + this._zoomVelocity, 0, 1);
     }
 
-    // Rate-based zoom: deviation from adaptive baseline drives zoom SPEED
-    const deadZone = 0.12;
-    const dev = this.state.openness - this._openBaseline;
-    const mag = Math.abs(dev) - deadZone;
-    if (mag > 0) {
-      // Open hand → zoom out (decrease), closed → zoom in (increase)
-      const dir = dev > 0 ? -1 : 1;
-      this.zoomLevel = clamp(this.zoomLevel + dir * mag * 0.025, 0, 1);
-    }
+    if (zoomStep < -0.003) this._zoomIntent = 'openPalm';
+    else if (zoomStep > 0.003) this._zoomIntent = 'closePalm';
+    else this._zoomIntent = 'hold';
+
+    this.state.zoomIntent = this._zoomIntent;
+    this.state.scale = 0.3 + this.zoomLevel * 2.7;
   }
 
   _computeVelocity(lm, time) {
@@ -809,6 +827,12 @@ class GestureSource extends EventTarget {
 
   setGesture(name) {
     this.state.source = 'simulator'; this.state.handDetected = name !== 'none'; this.state.gesture = name;
+    if (name === 'openPalm' || name === 'closePalm') {
+      const dir = name === 'openPalm' ? -1 : 1;
+      this.zoomLevel = clamp(this.zoomLevel + dir * 0.18, 0, 1);
+      this.state.zoomIntent = name;
+      this.state.scale = 0.3 + this.zoomLevel * 2.7;
+    }
     if (name === 'fist') setTimeout(() => { this.state.gesture = 'track'; this._emit(); }, 800);
     if (name === 'wave') { this.state.velocityX = 0.6; this.state.velocity = 0.8; setTimeout(() => { this.state.gesture = 'track'; this.state.velocity = 0; this.state.velocityX = 0; this._emit(); }, 1200); }
     this._emit();
@@ -1794,8 +1818,17 @@ function updateLabUI(state) {
   dotCamera.className = 'dot ' + cam[0];
   statusCamera.textContent = cam[1];
 
+  const gestureMap = {
+    openPalm: '开掌缩放',
+    closePalm: '收掌缩放',
+    track: '移动',
+    fist: '脉冲',
+    wave: '扰动',
+    none: 'none'
+  };
+
   if (state.handDetected) {
-    dotGesture.className = 'dot dot-active'; statusGesture.textContent = state.gesture;
+    dotGesture.className = 'dot dot-active'; statusGesture.textContent = gestureMap[state.gesture] || state.gesture;
   } else if (state.confidence < 0.3 && state.cameraStatus === 'tracking') {
     dotGesture.className = 'dot dot-error'; statusGesture.textContent = 'signal weak';
   } else {
