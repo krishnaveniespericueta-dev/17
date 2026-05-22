@@ -1,52 +1,1825 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#4801ff">
-<title>Cosmos in Hand | 17 SHIQI</title>
-<link rel="stylesheet" href="project-style.css">
+<title>Cosmos in Hand / 手势星仪装置 | 17 SHIQI</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #efeeec;
+  --ink: #0a0a0a;
+  --muted: rgba(10,10,10,0.48);
+  --hair: rgba(10,10,10,0.14);
+  --hair-strong: rgba(10,10,10,0.32);
+  --lavender-1: #e7ddf5;
+  --lavender-2: #f1eaf9;
+  --lavender-3: #f6f1fb;
+  --accent-violet: #6b3fff;
+  --space-bg: #060418;
+  --space-deep: #0d0625;
+  --space-glow: #2a0f6b;
+  --space-warm: #4a1f8a;
+  --star-white: #f4ecff;
+  --star-warm: #ffd9b3;
+}
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ========== CHROME: Fixed elements ========== */
+.chrome-logo {
+  position: fixed; top: 36px; left: 64px; z-index: 100;
+  font-family: 'Archivo Black', sans-serif; font-size: 28px;
+  line-height: 0.95; letter-spacing: -0.02em; color: var(--ink);
+  text-decoration: none; pointer-events: auto;
+}
+.chrome-logo span { display: block; }
+
+.chrome-close {
+  position: fixed; top: 36px; right: 64px; z-index: 100;
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1.5px solid var(--ink); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, color 0.25s;
+}
+.chrome-close:hover { background: var(--ink); }
+.chrome-close svg { width: 18px; height: 18px; }
+.chrome-close:hover svg line { stroke: var(--bg); }
+.chrome-close svg line { stroke: var(--ink); stroke-width: 1.8; transition: stroke 0.25s; }
+
+/* ========== INTRO STATE ========== */
+#intro {
+  min-height: 100vh; padding: 56px 64px 80px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+#intro.fade-out { opacity: 0; transform: scale(0.98); pointer-events: none; }
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-top: 60px; margin-bottom: 24px;
+}
+
+.title-block { position: relative; margin-bottom: 12px; }
+.main-title {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif; font-weight: 900;
+  font-size: clamp(86px, 12.6vw, 210px); line-height: 0.84;
+  letter-spacing: -0.045em; color: var(--ink);
+  text-transform: uppercase;
+}
+.main-title .row { display: block; }
+.main-title .spaced { letter-spacing: 0.18em; }
+
+.lede-overlap {
+  position: absolute; right: 0; bottom: 6%;
+  max-width: 520px; text-align: right;
+}
+.lede-overlap p {
+  font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 6px;
+}
+.lede-overlap strong { color: var(--ink); font-weight: 600; }
+
+.latin-sub {
+  font-family: 'Archivo Black', sans-serif; font-size: clamp(14px, 2vw, 22px);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--hair-strong); margin-bottom: 48px;
+}
+
+/* Meta row */
+.meta-divider {
+  border: none; border-top: 1px solid var(--hair);
+  margin: 0 0 20px;
+}
+.meta-row {
+  display: flex; gap: 48px; margin-bottom: 20px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.meta-row dt { color: var(--muted); margin-bottom: 4px; }
+.meta-row dd { color: var(--ink); font-weight: 500; }
+
+/* Hero orrery */
+.hero-orrery {
+  width: 100%; aspect-ratio: 16/9; max-height: 560px;
+  border-radius: 12px; overflow: hidden;
+  position: relative; margin-bottom: 72px;
+  background: linear-gradient(135deg, var(--lavender-1), var(--lavender-2), var(--lavender-3));
+}
+.hero-orrery svg { width: 100%; height: 100%; }
+.hero-cta {
+  position: absolute; bottom: 32px; right: 32px;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px; background: var(--ink); color: var(--bg);
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border: none; border-radius: 6px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+.hero-cta .cta-block { width: 10px; height: 10px; background: var(--accent-violet); border-radius: 2px; }
+
+/* Installation logic */
+.case-label {
+  font-family: 'Archivo Black', sans-serif; font-size: clamp(48px, 8vw, 120px);
+  line-height: 0.86; letter-spacing: -0.03em;
+  color: var(--hair); margin-bottom: 8px;
+}
+.case-body { max-width: 680px; margin-bottom: 72px; }
+.case-body p {
+  font-size: 16px; line-height: 1.65; color: var(--muted);
+  margin-bottom: 20px; max-width: 60ch;
+}
+.case-body p strong { color: var(--ink); font-weight: 600; }
+.case-body .violet-hl { color: var(--accent-violet); font-weight: 600; }
+
+/* Detail panels */
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-bottom: 72px;
+}
+.detail-panel {
+  border: 1px solid var(--hair); border-radius: 12px;
+  padding: 36px 32px;
+}
+.detail-panel .panel-eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+}
+.detail-panel .panel-title {
+  font-family: 'Archivo Black', sans-serif; font-size: 20px;
+  letter-spacing: -0.01em; margin-bottom: 28px; color: var(--ink);
+}
+.gesture-table { width: 100%; border-collapse: collapse; }
+.gesture-table tr { border-bottom: 1px solid var(--hair); }
+.gesture-table tr:last-child { border-bottom: none; }
+.gesture-table td {
+  padding: 10px 0; font-size: 14px; vertical-align: baseline;
+}
+.gesture-table .g-cn { font-weight: 600; color: var(--ink); width: 60px; }
+.gesture-table .g-en {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-violet);
+  width: 80px;
+}
+.gesture-table .g-note { color: var(--muted); }
+
+.pipeline-list { list-style: none; }
+.pipeline-list li {
+  font-size: 14px; line-height: 1.7; color: var(--muted);
+  padding-left: 16px; position: relative;
+}
+.pipeline-list li::before {
+  content: '—'; position: absolute; left: 0; color: var(--hair-strong);
+}
+.pipeline-section {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink); margin-top: 24px; margin-bottom: 10px;
+  font-weight: 500;
+}
+.pipeline-section:first-child { margin-top: 0; }
+
+.signal-list { list-style: none; }
+.signal-list li {
+  font-size: 14px; line-height: 1.7; color: var(--muted);
+  padding-left: 16px; position: relative; font-style: italic;
+}
+.signal-list li::before {
+  content: '·'; position: absolute; left: 4px; color: var(--accent-violet);
+  font-style: normal;
+}
+
+/* Footer nav */
+.footer-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 32px 0; border-top: 1px solid var(--hair);
+}
+.footer-link {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: var(--accent-violet); }
+
+/* ========== LAB STATE ========== */
+#lab {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--space-bg); display: none;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+#lab.active { display: block; }
+#lab.visible { opacity: 1; }
+
+#space-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+.lab-close {
+  position: fixed; top: 28px; right: 28px; z-index: 210;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(244,236,255,0.3); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.25s, background 0.25s;
+}
+.lab-close:hover { border-color: rgba(244,236,255,0.7); background: rgba(244,236,255,0.08); }
+.lab-close svg { width: 14px; height: 14px; }
+.lab-close svg line { stroke: rgba(244,236,255,0.6); stroke-width: 1.5; }
+
+.lab-logo {
+  position: fixed; top: 32px; left: 40px; z-index: 210;
+  font-family: 'Archivo Black', sans-serif; font-size: 14px;
+  color: rgba(244,236,255,0.4); letter-spacing: 0.04em;
+}
+
+.lab-status {
+  position: fixed; bottom: 40px; left: 40px; z-index: 210;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  line-height: 2.0; color: rgba(244,236,255,0.5);
+}
+.lab-status .dot {
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; margin: 0 8px; vertical-align: middle;
+  transition: background 0.4s;
+}
+.dot-idle { background: #666; }
+.dot-active { background: var(--accent-violet); }
+.dot-error { background: #ff5577; }
+
+.lab-hints {
+  position: fixed; bottom: 40px; right: 40px; z-index: 210;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  line-height: 2.2; color: rgba(244,236,255,0.35);
+  text-align: right;
+  transition: opacity 1.0s ease;
+}
+.lab-hints.hidden { opacity: 0; pointer-events: none; }
+
+/* Loading overlay */
+.lab-loading {
+  position: fixed; inset: 0; z-index: 220;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.lab-loading.hidden { display: none; }
+.loading-text {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  letter-spacing: 0.18em; color: rgba(244,236,255,0.5);
+  text-transform: uppercase;
+}
+.loading-bar {
+  width: 200px; height: 1px; background: rgba(244,236,255,0.1);
+  margin-top: 16px; position: relative; overflow: hidden;
+}
+.loading-bar-fill {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: rgba(244,236,255,0.5); width: 0%;
+  transition: width 0.3s ease;
+}
+.skip-gesture-btn {
+  margin-top: 24px; opacity: 0; pointer-events: none;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(244,236,255,0.4); background: transparent;
+  border: 1px solid rgba(244,236,255,0.15); border-radius: 4px;
+  padding: 8px 18px; cursor: pointer;
+  transition: opacity 0.6s, border-color 0.25s, color 0.25s;
+  pointer-events: auto;
+}
+.skip-gesture-btn.show { opacity: 1; pointer-events: auto; }
+.skip-gesture-btn:hover { border-color: rgba(244,236,255,0.4); color: rgba(244,236,255,0.7); }
+
+/* Dev simulator */
+.dev-panel {
+  position: fixed; bottom: 120px; left: 40px; z-index: 230;
+  display: none; gap: 6px; flex-wrap: wrap; max-width: 200px;
+}
+.dev-panel.show { display: flex; }
+.dev-btn {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 10px; background: rgba(244,236,255,0.08);
+  border: 1px solid rgba(244,236,255,0.2); border-radius: 3px;
+  color: rgba(244,236,255,0.5); cursor: pointer;
+}
+.dev-btn:hover { background: rgba(244,236,255,0.15); }
+.dev-btn.active { border-color: var(--accent-violet); color: var(--accent-violet); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  #intro { padding: 32px 24px 60px; }
+  .chrome-logo { top: 24px; left: 24px; font-size: 22px; }
+  .chrome-close { top: 24px; right: 24px; width: 44px; height: 44px; }
+  .eyebrow { margin-top: 48px; }
+  .lede-overlap { position: static; max-width: 100%; text-align: left; margin-top: 16px; margin-bottom: 24px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .meta-row { flex-wrap: wrap; gap: 24px; }
+  .lab-hints { display: none; }
+}
+</style>
 </head>
-<body class="work-page loading">
-  <header class="topbar">
-    <a class="logo" href="/">SQH<br>Portfolio</a>
-    <a class="back" href="/" aria-label="Back to portfolio"></a>
-  </header>
-  <main class="project">
-    <section class="hero">
-      <div>
-        <p class="kicker">2024 / Concept Reserve</p>
-        <h1>Cosmos<br>in Hand</h1>
-      </div>
-      <p class="summary">Cosmos in Hand 是一个预留给后续视觉与交互补充的概念标题：把复杂灵感、宇宙感意象和可操作界面收束成一个可以被握在手里的小型体验。</p>
-    </section>
-    <section class="meta" aria-label="项目详情">
-      <div><span>角色</span><b>概念整理与交互设定</b></div>
-      <div><span>范围</span><b>视觉方向、界面原型、体验结构</b></div>
-      <div><span>状态</span><b>等待素材补充</b></div>
-    </section>
-    <section class="media-grid" aria-label="项目素材占位">
-      <div class="placeholder large" data-label="Cosmic interface capture"></div>
-      <div class="placeholder" data-label="Micro interaction"></div>
-      <div class="placeholder" data-label="Visual motif"></div>
-    </section>
-    <section class="copy-block">
-      <h2>Concept<br>Logic</h2>
-      <p>这个标题用于承接更偏“想象力容器”的作品：它可以放交互实验、宇宙主题视觉、掌上工具界面，或一组把抽象世界观压缩成可触摸体验的设计稿。</p>
-    </section>
-    <nav class="project-nav" aria-label="Project navigation">
-      <a href="project-05.html">Previous</a>
-      <a href="project-07.html">Next</a>
-    </nav>
-  </main>
-<script>
-  setTimeout(() => document.body.classList.remove('loading'), 620);
-  const syncProjectScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 120);
-  window.addEventListener('scroll', syncProjectScroll, { passive: true });
-  syncProjectScroll();
+<body>
+
+<!-- ==================== CHROME ==================== -->
+<a href="/" class="chrome-logo"><span>SQH</span><span>PORTFOLIO</span></a>
+
+<button class="chrome-close" aria-label="返回首页" onclick="window.location.href='/'">
+  <svg viewBox="0 0 18 18"><line x1="4" y1="4" x2="14" y2="14"/><line x1="14" y1="4" x2="4" y2="14"/></svg>
+</button>
+
+<!-- ==================== INTRO STATE ==================== -->
+<div id="intro">
+  <p class="eyebrow">2026 / Project No.06 / Interactive Installation</p>
+
+  <div class="title-block">
+    <h1 class="main-title">
+      <span class="row">Cosmos in</span>
+      <span class="row">Hand</span>
+    </h1>
+    <div class="lede-overlap">
+      <p>一个通过手势识别操控三维星系运行的浏览器交互装置。</p>
+      <p>打开摄像头，用<strong>单手</strong>让星轨旋转、缩放、脉冲、扰动。</p>
+      <p>画面不离开设备，只读取 21 个手部关键点。</p>
+    </div>
+  </div>
+
+  <p class="latin-sub">手势星仪装置 · Gesture-controlled celestial installation</p>
+
+  <hr class="meta-divider">
+  <dl class="meta-row">
+    <div><dt>Role</dt><dd>Interaction Design + Build</dd></div>
+    <div><dt>Scope</dt><dd>Web · Camera · MediaPipe · Three.js</dd></div>
+    <div><dt>Status</dt><dd>Live Installation Prototype</dd></div>
+  </dl>
+  <hr class="meta-divider">
+
+  <!-- Hero Orrery SVG -->
+  <div class="hero-orrery">
+    <svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg">
+      <!-- Diagonal texture -->
+      <defs>
+        <pattern id="diag" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="12" stroke="rgba(10,10,10,0.04)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="1200" height="675" fill="url(#diag)"/>
+
+      <!-- Corner labels -->
+      <text x="32" y="32" font-family="IBM Plex Mono" font-size="10" fill="rgba(10,10,10,0.32)" letter-spacing="0.12em">FIG.01 · 装置预览</text>
+      <text x="1168" y="32" font-family="IBM Plex Mono" font-size="10" fill="rgba(10,10,10,0.32)" letter-spacing="0.12em" text-anchor="end">N=2 · 轨道</text>
+      <text x="32" y="660" font-family="IBM Plex Mono" font-size="10" fill="rgba(10,10,10,0.32)" letter-spacing="0.12em">θ≈18° · 倾角</text>
+
+      <!-- Orbits -->
+      <g transform="translate(600, 337) rotate(-14)">
+        <ellipse cx="0" cy="0" rx="200" ry="80" fill="none" stroke="rgba(10,10,10,0.25)" stroke-width="1"/>
+        <ellipse cx="0" cy="0" rx="320" ry="128" fill="none" stroke="rgba(10,10,10,0.18)" stroke-width="1"/>
+      </g>
+
+      <!-- Central star -->
+      <circle cx="600" cy="337" r="14" fill="var(--ink)"/>
+      <circle cx="600" cy="337" r="20" fill="none" stroke="rgba(10,10,10,0.12)" stroke-width="0.5"/>
+
+      <!-- Planets -->
+      <circle cx="780" cy="300" r="5" fill="var(--ink)"/>
+      <line x1="780" y1="290" x2="780" y2="270" stroke="rgba(10,10,10,0.2)" stroke-width="0.5"/>
+      <text x="790" y="268" font-family="IBM Plex Mono" font-size="8" fill="rgba(10,10,10,0.35)">P-01</text>
+
+      <circle cx="440" cy="380" r="4" fill="var(--ink)"/>
+      <line x1="440" y1="390" x2="440" y2="410" stroke="rgba(10,10,10,0.2)" stroke-width="0.5"/>
+      <text x="420" y="422" font-family="IBM Plex Mono" font-size="8" fill="rgba(10,10,10,0.35)">P-02</text>
+
+      <!-- AU Scale -->
+      <line x1="480" y1="520" x2="720" y2="520" stroke="rgba(10,10,10,0.2)" stroke-width="0.5"/>
+      <line x1="480" y1="515" x2="480" y2="525" stroke="rgba(10,10,10,0.2)" stroke-width="0.5"/>
+      <line x1="720" y1="515" x2="720" y2="525" stroke="rgba(10,10,10,0.2)" stroke-width="0.5"/>
+      <text x="600" y="540" font-family="IBM Plex Mono" font-size="8" fill="rgba(10,10,10,0.3)" text-anchor="middle">1 AU</text>
+
+      <!-- Star dust dots -->
+      <circle cx="150" cy="120" r="1.5" fill="rgba(10,10,10,0.1)"/>
+      <circle cx="980" cy="180" r="1" fill="rgba(10,10,10,0.08)"/>
+      <circle cx="300" cy="500" r="1.2" fill="rgba(10,10,10,0.1)"/>
+      <circle cx="900" cy="550" r="1" fill="rgba(10,10,10,0.07)"/>
+      <circle cx="1050" cy="400" r="1.5" fill="rgba(10,10,10,0.09)"/>
+      <circle cx="200" cy="250" r="0.8" fill="rgba(10,10,10,0.06)"/>
+      <circle cx="850" cy="100" r="1.2" fill="rgba(10,10,10,0.08)"/>
+      <circle cx="700" cy="600" r="1" fill="rgba(10,10,10,0.07)"/>
+    </svg>
+    <button class="hero-cta enter-experiment" aria-label="进入装置">
+      <span class="cta-block"></span>
+      进入装置 ———&gt;
+    </button>
+  </div>
+
+  <!-- Installation logic -->
+  <div style="display:flex; gap:48px; margin-bottom:72px; flex-wrap:wrap;">
+    <div>
+      <p class="case-label">LIVE<br>INSTALLATION</p>
+    </div>
+    <div class="case-body">
+      <p>这是一个把手势识别、三维渲染和宇宙意象压缩到浏览器里的交互装置。出发点是一个简单的问题——<strong class="violet-hl">如果手势可以操控一个真实存在的宇宙，那会是什么感觉？</strong>不是控制台、不是仪表盘，而是一段悬浮的星系，等你伸手让它运行。</p>
+      <p>摄像头开启后，浏览器在本地推理 21 个手部关键点，画面不外传、不录制、不上传，也不识别人脸。识别结果被抽象成单手 5 个手势：移动、捏合、张掌、握拳、挥手，对应宇宙装置的 5 种状态。鼠标和模拟器为降级输入兜底。</p>
+      <p>在介绍页，宇宙是一张静态的星仪草图；点击「进入装置」后，页面切入深空，作品进入真实的三维运行状态。从「档案」到「现场」的切换，是这个项目的核心节奏。</p>
+    </div>
+  </div>
+
+  <!-- Detail Panels -->
+  <div class="detail-grid">
+    <div class="detail-panel">
+      <p class="panel-eyebrow">Detail 01</p>
+      <p class="panel-title">手势 → 装置</p>
+      <table class="gesture-table">
+        <tr><td class="g-cn">移动</td><td class="g-en">ROTATE</td><td class="g-note">旋转宇宙</td></tr>
+        <tr><td class="g-cn">捏合</td><td class="g-en">PINCH</td><td class="g-note">缩放装置</td></tr>
+        <tr><td class="g-cn">张掌</td><td class="g-en">EXPAND</td><td class="g-note">展开结构</td></tr>
+        <tr><td class="g-cn">握拳</td><td class="g-en">PULSE</td><td class="g-note">恒星脉冲</td></tr>
+        <tr><td class="g-cn">挥手</td><td class="g-en">DISTURB</td><td class="g-note">星群扰动</td></tr>
+      </table>
+    </div>
+    <div class="detail-panel">
+      <p class="panel-eyebrow">Detail 02</p>
+      <p class="panel-title">原理 + 信号</p>
+      <p class="pipeline-section">原理 / Pipeline</p>
+      <ul class="pipeline-list">
+        <li>摄像头 → 21 个手部关键点</li>
+        <li>MediaPipe Hands · 本地 WASM 推理</li>
+        <li>关键点 → 归一化的 GestureState</li>
+        <li>State → 驱动宇宙装置参数</li>
+        <li>鼠标 / 模拟器 可作降级输入</li>
+      </ul>
+      <p class="pipeline-section">信号 / Signal</p>
+      <ul class="signal-list">
+        <li>画面不离开你的设备。</li>
+        <li>这是一段不被记录的信号。</li>
+        <li>关闭页面，宇宙就消失了。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer Nav -->
+  <nav class="footer-nav">
+    <a href="/" class="footer-link">←—— Portfolio</a>
+    <a href="#lab" class="footer-link enter-experiment">Enter Installation ——→</a>
+  </nav>
+</div>
+
+<!-- ==================== LAB STATE ==================== -->
+<div id="lab">
+  <canvas id="space-canvas"></canvas>
+
+  <span class="lab-logo">SQH</span>
+
+  <button class="lab-close" aria-label="返回介绍">
+    <svg viewBox="0 0 14 14"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>
+  </button>
+
+  <div class="lab-status">
+    <div>摄像头 <span class="dot dot-idle" id="dot-camera"></span> <span id="status-camera">待机</span></div>
+    <div>手势 <span class="dot dot-idle" id="dot-gesture"></span> <span id="status-gesture">none</span></div>
+    <div>输入 <span class="dot dot-idle" id="dot-input"></span> <span id="status-input">—</span></div>
+  </div>
+
+  <div class="lab-hints" id="lab-hints">
+    单手挥动 = 旋转<br>
+    捏合 = 缩放<br>
+    张掌 = 展开<br>
+    握拳 = 脉冲<br>
+    挥手 = 扰动
+  </div>
+
+  <div class="lab-loading" id="lab-loading">
+    <span class="loading-text">LOADING SIGNAL</span>
+    <div class="loading-bar"><div class="loading-bar-fill" id="loading-fill"></div></div>
+    <button class="skip-gesture-btn" id="skip-gesture-btn">跳过手势，使用鼠标 →</button>
+  </div>
+
+  <div class="dev-panel" id="dev-panel">
+    <button class="dev-btn" data-gesture="rotate">rotate</button>
+    <button class="dev-btn" data-gesture="pinch">pinch</button>
+    <button class="dev-btn" data-gesture="openPalm">palm</button>
+    <button class="dev-btn" data-gesture="fist">fist</button>
+    <button class="dev-btn" data-gesture="wave">wave</button>
+    <button class="dev-btn" data-gesture="none">reset</button>
+  </div>
+</div>
+
+<!-- ==================== MAIN SCRIPT ==================== -->
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { EffectComposer } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+const PERF = navigator.hardwareConcurrency >= 4 && window.devicePixelRatio <= 2 ? 'high' : 'low';
+function lerp(a, b, t) { return a + (b - a) * t; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function smoothstep(lo, hi, x) { const t = clamp((x - lo) / (hi - lo), 0, 1); return t * t * (3 - 2 * t); }
+
+// ============================================================
+//  GESTURE SOURCE
+// ============================================================
+class GestureSource extends EventTarget {
+  constructor() {
+    super();
+    this.state = {
+      source: 'mouse', cameraStatus: 'idle', handDetected: false,
+      gesture: 'none', x: 0, y: 0, openness: 0.5, velocity: 0, velocityX: 0,
+      confidence: 0, timestamp: 0
+    };
+    this.zoomLevel = 0.5;
+    this._wristHistory = [];
+    this._openBaseline = -1; // adaptive neutral point, -1 = not yet calibrated
+    this._gestureBuffer = [];
+    this._stableGesture = 'none';
+    this._stableCount = 0;
+    this._landmarker = null;
+    this._video = null;
+    this._stream = null;
+    this._lastInference = 0;
+    this._mouseDown = false;
+    this._rightDown = false;
+    this._mouseVelHistory = [];
+    this._touchStartDist = 0;
+    this._touchHistory = [];
+    this._inFist = false;
+  }
+
+  async initCamera() {
+    if (this._isMobile()) {
+      this.state.source = 'touch';
+      this.state.cameraStatus = 'blocked';
+      this._enableTouch();
+      return;
+    }
+    this.state.cameraStatus = 'requesting';
+    this._emit();
+    try {
+      const { HandLandmarker, FilesetResolver } = await import(
+        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs'
+      );
+      const vision = await FilesetResolver.forVisionTasks(
+        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
+      );
+      this._landmarker = await HandLandmarker.createFromOptions(vision, {
+        baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task' },
+        numHands: 1, runningMode: 'VIDEO'
+      });
+      this._video = document.createElement('video');
+      this._video.setAttribute('playsinline', '');
+      this._stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      this._video.srcObject = this._stream;
+      await this._video.play();
+      this.state.source = 'camera';
+      this.state.cameraStatus = 'ready';
+      this._emit();
+    } catch (e) {
+      console.warn('Camera init failed:', e);
+      this.state.cameraStatus = 'blocked';
+      this.state.source = 'mouse';
+      this.enableMouseFallback();
+      this._emit();
+    }
+  }
+
+  processVideoFrame(time) {
+    if (!this._landmarker || !this._video || this._video.readyState < 2) return;
+    if (time - this._lastInference < 20) return;
+    this._lastInference = time;
+    const results = this._landmarker.detectForVideo(this._video, time);
+    if (results.landmarks && results.landmarks.length > 0) {
+      const lm = results.landmarks[0];
+      this.state.handDetected = true;
+      this.state.cameraStatus = 'tracking';
+      this.state.confidence = 0.9;
+      this.state.x = (lm[9].x - 0.5) * 2;
+      this.state.y = (lm[9].y - 0.5) * 2;
+      this.state.timestamp = time;
+      const raw = this._classifyGesture(lm, time);
+      this._stabilize(raw);
+      this.state.gesture = this._stableGesture;
+      this._computeOpenness(lm);
+      this._computeVelocity(lm, time);
+    } else {
+      this.state.handDetected = false;
+      if (this.state.cameraStatus === 'tracking') this.state.cameraStatus = 'ready';
+      this.state.confidence = Math.max(0, this.state.confidence - 0.02);
+    }
+    this._emit();
+  }
+
+  _classifyGesture(lm, time) {
+    const palmW = this._dist(lm[0], lm[5]);
+    const tips = [4, 8, 12, 16, 20];
+    const tipDists = tips.map(i => this._dist(lm[i], lm[0]));
+
+    // Fist with hysteresis — easy to enter, hard to exit
+    if (this._inFist) {
+      if (tipDists.some(d => d > palmW * 0.75)) this._inFist = false;
+      else return 'fist';
+    } else if (tipDists.every(d => d < palmW * 0.55)) {
+      this._inFist = true;
+      return 'fist';
+    }
+
+    return 'track';
+  }
+
+  _stabilize(raw) {
+    this._gestureBuffer.push(raw);
+    if (this._gestureBuffer.length > 5) this._gestureBuffer.shift();
+    if (raw !== this._stableGesture && this._gestureBuffer.slice(-2).every(g => g === raw)) {
+      this._stableGesture = raw;
+    }
+  }
+
+  _computeOpenness(lm) {
+    const palmW = this._dist(lm[0], lm[5]);
+    // Openness: average fingertip-to-wrist distance, normalized
+    const tips = [8, 12, 16, 20];
+    const avgDist = tips.reduce((sum, i) => sum + this._dist(lm[i], lm[0]), 0) / tips.length;
+    this.state.openness = clamp((avgDist / palmW - 0.5) / 1.0, 0, 1);
+
+    // Adaptive baseline: track user's natural resting openness via slow EMA
+    if (this._openBaseline < 0) {
+      this._openBaseline = this.state.openness; // first reading = initial calibration
+    } else {
+      this._openBaseline = this._openBaseline * 0.995 + this.state.openness * 0.005;
+    }
+
+    // Rate-based zoom: deviation from adaptive baseline drives zoom SPEED
+    const deadZone = 0.12;
+    const dev = this.state.openness - this._openBaseline;
+    const mag = Math.abs(dev) - deadZone;
+    if (mag > 0) {
+      // Open hand → zoom out (decrease), closed → zoom in (increase)
+      const dir = dev > 0 ? -1 : 1;
+      this.zoomLevel = clamp(this.zoomLevel + dir * mag * 0.025, 0, 1);
+    }
+  }
+
+  _computeVelocity(lm, time) {
+    this._wristHistory.push({ x: lm[0].x, y: lm[0].y, t: time });
+    this._wristHistory = this._wristHistory.filter(e => time - e.t < 500);
+    if (this._wristHistory.length >= 2) {
+      const a = this._wristHistory[this._wristHistory.length - 2], b = this._wristHistory[this._wristHistory.length - 1];
+      const dt = (b.t - a.t) / 1000;
+      if (dt > 0) {
+        this.state.velocity = Math.min(1, Math.sqrt((b.x - a.x) ** 2 + ((b.y || 0) - (a.y || 0)) ** 2) / dt * 0.5);
+        // Signed horizontal velocity (negate because webcam is mirrored)
+        this.state.velocityX = clamp(-(b.x - a.x) / dt * 0.5, -1, 1);
+      }
+    }
+  }
+
+  _dist(a, b) { return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + ((a.z || 0) - (b.z || 0)) ** 2); }
+
+  enableMouseFallback() {
+    if (this._mouseInit) return;
+    this._mouseInit = true;
+    this.state.source = 'mouse';
+    const cv = document.getElementById('space-canvas');
+
+    cv.addEventListener('mousemove', (e) => {
+      this.state.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      this.state.y = (e.clientY / window.innerHeight - 0.5) * 2;
+      this.state.timestamp = performance.now();
+      const now = performance.now();
+      this._mouseVelHistory.push({ x: e.clientX, t: now });
+      this._mouseVelHistory = this._mouseVelHistory.filter(h => now - h.t < 300);
+      if (this._mouseVelHistory.length >= 2 && !this._rightDown) {
+        const a = this._mouseVelHistory[0], b = this._mouseVelHistory[this._mouseVelHistory.length - 1];
+        const dt = (b.t - a.t) / 1000 || 1;
+        const dx = (b.x - a.x) / window.innerWidth;
+        this.state.velocityX = clamp(dx / dt, -1, 1);
+        this.state.velocity = Math.min(1, Math.abs(dx) / dt);
+      }
+      if (!this._mouseDown && !this._rightDown) { this.state.gesture = 'track'; this.state.handDetected = true; }
+      this._emit();
+    });
+
+    cv.addEventListener('mousedown', (e) => {
+      if (e.button === 0) this._mouseDown = true;
+      if (e.button === 2) { this._rightDown = true; this.state.openness = 0.9; this._emit(); }
+    });
+    cv.addEventListener('mouseup', (e) => {
+      if (e.button === 0) this._mouseDown = false;
+      if (e.button === 2) { this._rightDown = false; this.state.openness = 0.5; this._emit(); }
+    });
+    cv.addEventListener('dblclick', () => {
+      this.state.gesture = 'fist'; this._emit();
+      setTimeout(() => { this.state.gesture = 'track'; this._emit(); }, 600);
+    });
+
+    cv.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      this.zoomLevel = clamp(this.zoomLevel + e.deltaY * 0.001, 0, 1);
+      this._emit();
+    }, { passive: false });
+
+    cv.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
+
+  _enableTouch() {
+    if (this._touchInit) return;
+    this._touchInit = true;
+    this.state.source = 'touch';
+    const cv = document.getElementById('space-canvas');
+    let lastTap = 0;
+
+    cv.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      this.state.handDetected = true;
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX, dy = e.touches[0].clientY - e.touches[1].clientY;
+        this._touchStartDist = Math.sqrt(dx * dx + dy * dy);
+      }
+      if (e.touches.length === 3) {
+        this._touchHistory = [{ x: e.touches[1].clientX, t: performance.now() }];
+      }
+      if (e.touches.length === 1) {
+        const now = performance.now();
+        if (now - lastTap < 350) { this.state.gesture = 'fist'; this._emit(); setTimeout(() => { this.state.gesture = 'track'; this._emit(); }, 600); }
+        lastTap = now;
+      }
+    }, { passive: false });
+
+    cv.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        this.state.gesture = 'track';
+        this.state.x = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+        this.state.y = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX, dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const ratio = dist / (this._touchStartDist || 1);
+        this.zoomLevel = clamp(this.zoomLevel + (1 - ratio) * 0.02, 0, 1);
+        this._touchStartDist = dist;
+      } else if (e.touches.length === 3) {
+        const now = performance.now(), cx = e.touches[1].clientX;
+        this._touchHistory.push({ x: cx, t: now });
+        this._touchHistory = this._touchHistory.filter(h => now - h.t < 500);
+        if (this._touchHistory.length >= 2) {
+          const prev = this._touchHistory[this._touchHistory.length - 2];
+          const dt = (now - prev.t) / 1000 || 1;
+          const dx = (cx - prev.x) / window.innerWidth;
+          this.state.velocityX = clamp(dx / dt, -1, 1);
+          this.state.velocity = Math.min(1, Math.abs(dx) / dt);
+        }
+      }
+      this._emit();
+    }, { passive: false });
+
+    cv.addEventListener('touchend', (e) => {
+      if (e.touches.length === 0) { this.state.gesture = 'track'; this._touchHistory = []; }
+      this._emit();
+    });
+  }
+
+  enableSimulator() {
+    const panel = document.getElementById('dev-panel');
+    panel.classList.add('show');
+    panel.querySelectorAll('.dev-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.setGesture(btn.dataset.gesture);
+        panel.querySelectorAll('.dev-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  }
+
+  setGesture(name) {
+    this.state.source = 'simulator'; this.state.handDetected = name !== 'none'; this.state.gesture = name;
+    if (name === 'fist') setTimeout(() => { this.state.gesture = 'track'; this._emit(); }, 800);
+    if (name === 'wave') { this.state.velocityX = 0.6; this.state.velocity = 0.8; setTimeout(() => { this.state.gesture = 'track'; this.state.velocity = 0; this.state.velocityX = 0; this._emit(); }, 1200); }
+    this._emit();
+  }
+
+  _isMobile() { return ('ontouchstart' in window) && screen.width < 1024; }
+
+  releaseCamera() {
+    if (this._stream) { this._stream.getTracks().forEach(t => t.stop()); this._stream = null; }
+    if (this._video) { this._video.srcObject = null; this._video = null; }
+  }
+
+  _emit() { this.dispatchEvent(new Event('update')); }
+}
+
+// ============================================================
+//  COSMOS SCENE — 3-scale zoom system
+// ============================================================
+class CosmosScene {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.disposed = false;
+    this.zoomLevel = 0.5; // 0 = galaxy, 0.5 = orbit, 1.0 = planet
+    this._targetZoom = 0.5;
+    this._spinVelocity = 0;
+    this._stillFrames = 0;
+    this._timeScale = 1;
+
+    this.params = {
+      rotX: 0, rotY: 0,
+      pulseEnergy: 0, disturbAmount: 0, orbitBrightness: 0,
+      posterAlpha: { gesture: 0.04, cosmos: 0.04, signal: 0.04, orbit: 0.04 }
+    };
+
+    this._initRenderer();
+    this._initCamera();
+    this._createBackground();
+    this._createGalaxy();
+    this._createOrrery();
+    this._createPlanetDetail();
+    this._createPosterTexts();
+    this._initPostProcessing();
+  }
+
+  _initRenderer() {
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: false });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 0.85;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x060418);
+  }
+
+  _initCamera() {
+    this.camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.01, 800);
+    this.camera.position.set(0, 5, 18);
+    this.camera.lookAt(0, 0, 0);
+  }
+
+  // --- BACKGROUND: starfield + nebulae ---
+  _createBackground() {
+    const count = PERF === 'high' ? 2000 : 900;
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3), col = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 300;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 300;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 300;
+      if (Math.random() < 0.05) { col[i * 3] = 1; col[i * 3 + 1] = 0.85; col[i * 3 + 2] = 0.7; }
+      else { const v = 0.88 + Math.random() * 0.12; col[i * 3] = v * 0.96; col[i * 3 + 1] = v * 0.93; col[i * 3 + 2] = v; }
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    this._bgStars = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.15, vertexColors: true, transparent: true, opacity: 0.7, sizeAttenuation: true, depthWrite: false }));
+    this.scene.add(this._bgStars);
+
+    // Nebulae
+    [[-20, 5, -40, 30, 0.15], [25, -8, -50, 35, 0.1], [-8, -12, -30, 20, 0.12]].forEach(([x, y, z, s, a]) => {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+      const ctx = c.getContext('2d');
+      for (let i = 0; i < 8; i++) {
+        const ox = (Math.random() - 0.5) * 200, oy = (Math.random() - 0.5) * 200;
+        const r = 80 + Math.random() * 120, hue = 260 + Math.random() * 30;
+        const g = ctx.createRadialGradient(256 + ox, 256 + oy, 0, 256 + ox, 256 + oy, r);
+        g.addColorStop(0, `hsla(${hue},70%,30%,0.5)`); g.addColorStop(1, `hsla(${hue},50%,20%,0)`);
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(s, s), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: a, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+      m.position.set(x, y, z); this.scene.add(m);
+    });
+  }
+
+  // --- GALAXY: spiral arms + dust lanes + nebulae + bulge ---
+  _createGalaxy() {
+    const armCount = 4, particlesPerArm = PERF === 'high' ? 3000 : 1500;
+    const dustPerArm = PERF === 'high' ? 600 : 300;
+    const total = armCount * (particlesPerArm + dustPerArm);
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(total * 3), col = new Float32Array(total * 3);
+    let idx = 0;
+    // Store radii for differential rotation
+    this._galaxyRadii = new Float32Array(total);
+
+    for (let arm = 0; arm < armCount; arm++) {
+      const armAngle = (arm / armCount) * Math.PI * 2;
+
+      // Bright star particles
+      for (let i = 0; i < particlesPerArm; i++) {
+        const t = i / particlesPerArm;
+        const r = 3 + t * 42;
+        const theta = armAngle + t * 4.0 + (Math.random() - 0.5) * 0.7;
+        const scatter = (1 - t * 0.2) * 2.5;
+        pos[idx * 3]     = Math.cos(theta) * r + (Math.random() - 0.5) * scatter;
+        pos[idx * 3 + 1] = (Math.random() - 0.5) * (0.4 + t * 0.2);
+        pos[idx * 3 + 2] = Math.sin(theta) * r + (Math.random() - 0.5) * scatter;
+        this._galaxyRadii[idx] = r;
+        const warmth = 1 - t;
+        const rand = (Math.random() - 0.5) * 0.12;
+        // Center: warm yellow-orange, Edge: blue-white
+        col[idx * 3]     = clamp(lerp(0.65, 1.0, warmth) + rand, 0, 1);
+        col[idx * 3 + 1] = clamp(lerp(0.78, 0.82, warmth) + rand, 0, 1);
+        col[idx * 3 + 2] = clamp(lerp(1.0, 0.4, warmth) + rand, 0, 1);
+        // Occasional blue-hot stars
+        if (Math.random() < 0.03 && t > 0.3) {
+          col[idx * 3] = 0.6 + rand; col[idx * 3 + 1] = 0.75 + rand; col[idx * 3 + 2] = 1.0;
+        }
+        idx++;
+      }
+
+      // Dark dust lane particles — offset between arms, dimmer
+      for (let i = 0; i < dustPerArm; i++) {
+        const t = i / dustPerArm;
+        const r = 5 + t * 38;
+        const theta = armAngle + 0.4 + t * 4.0 + (Math.random() - 0.5) * 0.3;
+        pos[idx * 3]     = Math.cos(theta) * r + (Math.random() - 0.5) * 1.5;
+        pos[idx * 3 + 1] = (Math.random() - 0.5) * 0.15;
+        pos[idx * 3 + 2] = Math.sin(theta) * r + (Math.random() - 0.5) * 1.5;
+        this._galaxyRadii[idx] = r;
+        // Very dim reddish-brown — absorbs light
+        col[idx * 3] = 0.12; col[idx * 3 + 1] = 0.06; col[idx * 3 + 2] = 0.03;
+        idx++;
+      }
+    }
+
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    this._galaxyPositions = pos; // keep ref for differential rotation
+    this._galaxyAngles = new Float32Array(total);
+    // Pre-compute initial angles
+    for (let i = 0; i < total; i++) {
+      this._galaxyAngles[i] = Math.atan2(pos[i * 3 + 2], pos[i * 3]);
+    }
+
+    const mat = new THREE.PointsMaterial({
+      size: 0.18, vertexColors: true, transparent: true, opacity: 1,
+      sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    this._galaxyGroup = new THREE.Group();
+    this._galaxyGroup.rotation.x = -0.3;
+    this.scene.add(this._galaxyGroup);
+
+    this._galaxy = new THREE.Points(geo, mat);
+    this._galaxyGroup.add(this._galaxy);
+
+    // Galaxy core glow — larger for bigger galaxy
+    const coreC = document.createElement('canvas'); coreC.width = 256; coreC.height = 256;
+    const cCtx = coreC.getContext('2d');
+    const cGrad = cCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    cGrad.addColorStop(0, 'rgba(255,235,210,0.95)');
+    cGrad.addColorStop(0.15, 'rgba(255,220,170,0.7)');
+    cGrad.addColorStop(0.4, 'rgba(200,150,220,0.2)');
+    cGrad.addColorStop(1, 'rgba(80,40,140,0)');
+    cCtx.fillStyle = cGrad; cCtx.fillRect(0, 0, 256, 256);
+    const coreTex = new THREE.CanvasTexture(coreC);
+    this._galaxyCore = new THREE.Mesh(
+      new THREE.PlaneGeometry(14, 14),
+      new THREE.MeshBasicMaterial({ map: coreTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })
+    );
+    this._galaxyCore.rotation.x = -Math.PI / 2;
+    this._galaxyGroup.add(this._galaxyCore);
+
+    // Central bulge — dense warm star cluster
+    const bulgeCount = PERF === 'high' ? 800 : 400;
+    const bulgeGeo = new THREE.BufferGeometry();
+    const bPos = new Float32Array(bulgeCount * 3), bCol = new Float32Array(bulgeCount * 3);
+    for (let i = 0; i < bulgeCount; i++) {
+      const r = Math.pow(Math.random(), 2.5) * 6;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = (Math.random() - 0.5) * Math.PI * 0.4;
+      bPos[i * 3]     = Math.cos(theta) * Math.cos(phi) * r;
+      bPos[i * 3 + 1] = Math.sin(phi) * r * 0.3;
+      bPos[i * 3 + 2] = Math.sin(theta) * Math.cos(phi) * r;
+      const bright = 0.7 + Math.random() * 0.3;
+      bCol[i * 3]     = bright;
+      bCol[i * 3 + 1] = bright * 0.8;
+      bCol[i * 3 + 2] = bright * 0.4;
+    }
+    bulgeGeo.setAttribute('position', new THREE.BufferAttribute(bPos, 3));
+    bulgeGeo.setAttribute('color', new THREE.BufferAttribute(bCol, 3));
+    this._galaxyBulge = new THREE.Points(bulgeGeo, new THREE.PointsMaterial({
+      size: 0.25, vertexColors: true, transparent: true, opacity: 1,
+      sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+    }));
+    this._galaxyGroup.add(this._galaxyBulge);
+
+    // Nebula sprites along arms
+    this._nebulae = [];
+    const nebulaColors = [
+      [1.0, 0.3, 0.5, 0.12],  // pink HII region
+      [0.3, 0.5, 1.0, 0.08],  // blue reflection
+      [1.0, 0.5, 0.3, 0.1],   // orange emission
+      [0.4, 0.8, 1.0, 0.07],  // cyan
+      [0.9, 0.4, 0.7, 0.09]   // magenta
+    ];
+    nebulaColors.forEach(([r, g, b, a], i) => {
+      const nc = document.createElement('canvas'); nc.width = 128; nc.height = 128;
+      const nctx = nc.getContext('2d');
+      const ng = nctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      ng.addColorStop(0, `rgba(${r*255|0},${g*255|0},${b*255|0},0.8)`);
+      ng.addColorStop(0.5, `rgba(${r*255|0},${g*255|0},${b*255|0},0.2)`);
+      ng.addColorStop(1, `rgba(${r*255|0},${g*255|0},${b*255|0},0)`);
+      nctx.fillStyle = ng; nctx.fillRect(0, 0, 128, 128);
+      const angle = i * 1.4 + 0.5;
+      const dist = 12 + i * 7;
+      const nm = new THREE.Mesh(
+        new THREE.PlaneGeometry(6 + i * 1.5, 6 + i * 1.5),
+        new THREE.MeshBasicMaterial({
+          map: new THREE.CanvasTexture(nc), transparent: true, opacity: a,
+          depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        })
+      );
+      nm.position.set(Math.cos(angle) * dist, (Math.random() - 0.5) * 0.5, Math.sin(angle) * dist);
+      nm.rotation.x = -Math.PI / 2;
+      nm.userData.baseOpacity = a;
+      nm.visible = false;
+      this._galaxyGroup.add(nm);
+      this._nebulae.push(nm);
+    });
+  }
+
+  // --- SOLAR SYSTEM: Sun + 8 planets ---
+  _createOrrery() {
+    this._orreryGroup = new THREE.Group();
+    this.scene.add(this._orreryGroup);
+
+    // Sun — flowing noise surface shader
+    const starGeo = new THREE.IcosahedronGeometry(0.6, 4);
+    this._star = new THREE.Mesh(starGeo, new THREE.ShaderMaterial({
+      transparent: true,
+      uniforms: { uTime: { value: 0 }, uOpacity: { value: 1 } },
+      vertexShader: `varying vec3 vPos; varying vec3 vNormal; varying vec3 vViewDir;
+        void main(){ vPos=position; vNormal=normalize(normalMatrix*normal);
+          vec4 mv=modelViewMatrix*vec4(position,1.0); vViewDir=normalize(-mv.xyz);
+          gl_Position=projectionMatrix*mv; }`,
+      fragmentShader: `uniform float uTime; uniform float uOpacity;
+        varying vec3 vPos; varying vec3 vNormal; varying vec3 vViewDir;
+        float hash(vec3 p){ return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453); }
+        float noise(vec3 p){ vec3 i=floor(p); vec3 f=fract(p); f=f*f*(3.0-2.0*f);
+          return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+            mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z); }
+        void main(){
+          vec3 sp=normalize(vPos);
+          float n=noise(sp*4.0+uTime*0.3)*0.5+noise(sp*8.0-uTime*0.2)*0.3+noise(sp*16.0+uTime*0.15)*0.2;
+          vec3 hot=vec3(1.0,0.95,0.75); vec3 warm=vec3(1.0,0.6,0.15);
+          vec3 col=mix(warm,hot,n);
+          float rim=max(0.0,dot(vNormal,vViewDir));
+          col*=0.65+0.35*rim;
+          gl_FragColor=vec4(col,uOpacity); }`
+    }));
+    this._orreryGroup.add(this._star);
+
+    this._planets = [];
+
+    // Real solar system — compressed orbit ratios for visual clarity
+    // type: 0=rocky, 1=gas giant, 2=earth, 3=ice giant
+    const planets = [
+      { name: 'mercury', rx: 1.8, ry: 1.75, tilt: 0.12, a: 0.0,  r: 0.04, c1: 0xbbb8b0, c2: 0x888580, speed: 0.47, spin: 0.003,  type: 0, atmoColor: null },
+      { name: 'venus',   rx: 2.8, ry: 2.72, tilt: 0.06, a: 2.1,  r: 0.08, c1: 0xf0d8a0, c2: 0xd4a860, speed: 0.35, spin: -0.002, type: 0, atmoColor: 0xffeecc },
+      { name: 'earth',   rx: 3.8, ry: 3.72, tilt: 0.0,  a: 4.2,  r: 0.14, c1: 0x1a6699, c2: 0x4d8844, speed: 0.29, spin: 0.02,   type: 2, atmoColor: 0x88bbff },
+      { name: 'mars',    rx: 5.0, ry: 4.88, tilt: 0.03, a: 1.5,  r: 0.06, c1: 0xcc7755, c2: 0x993322, speed: 0.23, spin: 0.019,  type: 0, atmoColor: null },
+      { name: 'jupiter', rx: 7.5, ry: 7.30, tilt: 0.02, a: 3.0,  r: 0.28, c1: 0xddbb88, c2: 0x996633, speed: 0.12, spin: 0.04,   type: 1, atmoColor: 0xffddbb },
+      { name: 'saturn',  rx: 10.0, ry: 9.70, tilt: -0.05, a: 5.5, r: 0.24, c1: 0xeedd99, c2: 0xccaa55, speed: 0.09, spin: 0.038, type: 1, atmoColor: null },
+      { name: 'uranus',  rx: 13.0, ry: 12.6, tilt: 0.08, a: 0.8,  r: 0.14, c1: 0xaaddee, c2: 0x77bbcc, speed: 0.06, spin: -0.03, type: 3, atmoColor: 0xaaeeff },
+      { name: 'neptune', rx: 16.0, ry: 15.5, tilt: 0.03, a: 3.8,  r: 0.13, c1: 0x4466dd, c2: 0x2244aa, speed: 0.04, spin: 0.032, type: 3, atmoColor: 0x6688ff }
+    ];
+
+    planets.forEach((cfg, idx) => {
+      const g = new THREE.Group();
+      g.rotation.x = cfg.tilt;
+      this._orreryGroup.add(g);
+
+      // Planet mesh — Earth uses realistic canvas texture, others use procedural shader
+      const isEarth = cfg.type === 2;
+      const pMat = isEarth
+        ? this._createEarthMaterial(this._createEarthTexture())
+        : this._createPlanetMaterial(cfg.c1, cfg.c2, cfg.type);
+      const pMesh = new THREE.Mesh(new THREE.SphereGeometry(cfg.r, isEarth ? 32 : 24, isEarth ? 24 : 16), pMat);
+      g.add(pMesh);
+
+      // Saturn's ring — Cassini division + fine structure
+      let ringMesh = null;
+      if (cfg.name === 'saturn') {
+        const innerR = cfg.r * 1.4, outerR = cfg.r * 2.3;
+        const ringGeo = new THREE.RingGeometry(innerR, outerR, 64);
+        ringMesh = new THREE.Mesh(ringGeo, new THREE.ShaderMaterial({
+          transparent: true, side: THREE.DoubleSide, depthWrite: false,
+          uniforms: { uInnerR: { value: innerR }, uOuterR: { value: outerR }, uOpacity: { value: 0.4 } },
+          vertexShader: `varying vec2 vRingPos;
+            void main(){ vRingPos=position.xy; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+          fragmentShader: `uniform float uInnerR; uniform float uOuterR; uniform float uOpacity;
+            varying vec2 vRingPos;
+            void main(){
+              float r=length(vRingPos);
+              float t=(r-uInnerR)/(uOuterR-uInnerR);
+              vec3 c1=vec3(0.85,0.78,0.6); vec3 c2=vec3(0.7,0.63,0.45);
+              vec3 col=mix(c1,c2,sin(t*40.0)*0.5+0.5);
+              float cassini=smoothstep(0.56,0.58,t)*(1.0-smoothstep(0.62,0.64,t));
+              float alpha=(1.0-cassini*0.85)*uOpacity;
+              alpha*=smoothstep(0.0,0.06,t)*smoothstep(1.0,0.94,t);
+              alpha*=0.55+0.45*(sin(t*80.0)*0.5+0.5);
+              gl_FragColor=vec4(col,alpha);
+            }`
+        }));
+        ringMesh.rotation.x = Math.PI / 2 + 0.45;
+        g.add(ringMesh);
+      }
+
+      // Atmosphere
+      let atmoMesh = null;
+      if (cfg.atmoColor) {
+        const isEarth = cfg.type === 2;
+        const atmoScale = isEarth ? 1.22 : 1.15;
+        const rimPow = isEarth ? '2.2' : '3.0';
+        const rimMul = isEarth ? '1.0' : '0.8';
+        atmoMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(cfg.r * atmoScale, 24, 16),
+          new THREE.ShaderMaterial({
+            transparent: true, depthWrite: false, side: THREE.FrontSide,
+            uniforms: { uColor: { value: new THREE.Color(cfg.atmoColor) }, uOpacity: { value: 0.0 } },
+            vertexShader: `varying vec3 vNormal; varying vec3 vViewDir;
+              void main(){ vNormal=normalize(normalMatrix*normal); vec4 mv=modelViewMatrix*vec4(position,1.0); vViewDir=normalize(-mv.xyz); gl_Position=projectionMatrix*mv; }`,
+            fragmentShader: `uniform vec3 uColor; uniform float uOpacity; varying vec3 vNormal; varying vec3 vViewDir;
+              void main(){ float rim=1.0-max(0.0,dot(vNormal,vViewDir)); float glow=pow(rim,${rimPow})*${rimMul}; gl_FragColor=vec4(uColor,glow*uOpacity); }`
+          })
+        );
+        g.add(atmoMesh);
+      }
+
+      this._planets.push({
+        name: cfg.name, mesh: pMesh, angle: cfg.a, speed: cfg.speed, baseSpeed: cfg.speed,
+        rx: cfg.rx, ry: cfg.ry, r: cfg.r, spin: cfg.spin, ringMesh, atmoMesh,
+        orbitIdx: idx, worldPos: new THREE.Vector3()
+      });
+    });
+
+    // Earth is index 2 — the default focus planet for zoom-in
+    this._focusPlanetIdx = 2;
+  }
+
+  // --- EARTH: canvas-drawn realistic continent texture ---
+  _createEarthTexture() {
+    const W = 256, H = 128;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const ctx = c.getContext('2d');
+    const img = ctx.createImageData(W, H);
+    const d = img.data;
+    const hsh = (a, b) => { let h = (a * 374761393 + b * 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) & 0xffff) / 65536; };
+    // Continent blobs: [lon°, lat°, sizeX°, sizeY°]
+    const B = [
+      // Africa
+      [18,10,14,28],[25,-12,11,18],[5,25,12,10],[38,2,8,12],[15,-25,8,10],
+      // Europe
+      [10,48,20,9],[30,56,14,7],[-5,42,7,7],[20,43,10,6],[40,50,10,6],
+      // Asia
+      [80,52,40,16],[110,35,22,14],[65,42,15,12],[130,48,14,12],[95,30,15,10],
+      // Middle East / India / SE Asia
+      [45,26,10,8],[78,22,9,13],[102,16,14,10],[48,32,8,6],
+      // North America
+      [-100,52,28,14],[-85,42,18,10],[-115,58,20,12],[-65,48,10,6],[-75,32,10,6],
+      // Central America + Caribbean
+      [-88,18,7,6],[-78,22,5,4],
+      // South America
+      [-58,-10,14,22],[-52,-28,10,14],[-68,2,10,12],[-70,-38,7,10],[-48,-5,8,8],
+      // Australia
+      [134,-25,16,11],[145,-35,6,5],
+      // Antarctica
+      [0,-85,180,5],[0,-78,100,7],[-60,-72,30,6],[90,-72,30,6],
+      // Greenland
+      [-42,72,10,10],
+      // Indonesia / Philippines
+      [118,-4,18,5],[125,10,5,5],[108,-7,6,4],
+      // Japan / Korea / Taiwan
+      [135,37,4,8],[128,38,4,4],[121,24,3,3],
+      // UK / Scandinavia / Iceland
+      [-3,55,4,6],[12,63,6,9],[-20,65,4,4],
+      // New Zealand
+      [173,-42,3,5],
+      // Madagascar
+      [47,-20,3,6],
+      // Arabia
+      [50,22,12,10],
+      // Siberia extent
+      [100,65,30,8],[140,62,15,7],
+      // Alaska
+      [-152,63,14,7],
+    ];
+    for (let py = 0; py < H; py++) {
+      const lat = 90 - (py / H) * 180;
+      for (let px = 0; px < W; px++) {
+        const lon = (px / W) * 360 - 180;
+        const idx = (py * W + px) * 4;
+        let land = 0;
+        for (const b of B) {
+          let dx = lon - b[0]; if (dx > 180) dx -= 360; if (dx < -180) dx += 360;
+          land += Math.exp(-(dx * dx) / (b[2] * b[2]) - ((lat - b[1]) * (lat - b[1])) / (b[3] * b[3]));
+        }
+        const absLat = Math.abs(lat);
+        const v = hsh(px, py) * 0.12;
+        if (land > 0.45) {
+          // Land biomes based on latitude
+          if (absLat > 72) {
+            d[idx] = 228; d[idx + 1] = 236; d[idx + 2] = 241; // ice/snow
+          } else if (absLat > 56) {
+            d[idx] = (52 + v * 100) | 0; d[idx + 1] = (82 + v * 80) | 0; d[idx + 2] = (40 + v * 60) | 0; // boreal
+          } else if (absLat < 28 && land < 0.62) {
+            d[idx] = (162 + v * 130) | 0; d[idx + 1] = (138 + v * 110) | 0; d[idx + 2] = (85 + v * 80) | 0; // desert
+          } else if (absLat < 16) {
+            d[idx] = (26 + v * 60) | 0; d[idx + 1] = (88 + v * 80) | 0; d[idx + 2] = (28 + v * 50) | 0; // tropical
+          } else {
+            d[idx] = (42 + v * 80) | 0; d[idx + 1] = (78 + v * 70) | 0; d[idx + 2] = (30 + v * 50) | 0; // temperate
+          }
+          d[idx + 3] = 255; // alpha=1 → land
+        } else {
+          // Ocean — deeper blue far from coast
+          const depth = Math.min(land * 2.2, 1);
+          d[idx] = (5 + depth * 18 + v * 25) | 0;
+          d[idx + 1] = (25 + depth * 42 + v * 30) | 0;
+          d[idx + 2] = (72 + depth * 50 + v * 35) | 0;
+          d[idx + 3] = 0; // alpha=0 → ocean
+        }
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  _createEarthMaterial(tex) {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uMap: { value: tex },
+        uLightDir: { value: new THREE.Vector3(1, 0.5, 0.3).normalize() },
+        uDetail: { value: 0.0 },
+        uTime: { value: 0.0 }
+      },
+      vertexShader: `varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
+        void main(){ vNormal=normalize(normalMatrix*normal); vPos=position; vUv=uv;
+          gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+      fragmentShader: `uniform sampler2D uMap; uniform vec3 uLightDir; uniform float uDetail; uniform float uTime;
+        varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
+        float hash(vec3 p){ return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453); }
+        float noise(vec3 p){ vec3 i=floor(p); vec3 f=fract(p); f=f*f*(3.0-2.0*f);
+          return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+            mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z); }
+        void main(){
+          vec4 tx=texture2D(uMap,vUv);
+          vec3 base=tx.rgb;
+          float landMask=tx.a;
+          float diff=smoothstep(-0.1,0.8,dot(vNormal,uLightDir))*0.85+0.08;
+          vec3 surface=mix(vec3(0.1,0.2,0.38),base,uDetail);
+          vec3 sp=normalize(vPos);
+          float cl=noise(sp*4.0+vec3(uTime*0.04,0.0,uTime*0.02))*0.5+noise(sp*8.0+vec3(uTime*0.06,0.0,0.0))*0.3+noise(sp*16.0+vec3(uTime*0.03,0.0,0.0))*0.2;
+          cl=smoothstep(0.4,0.7,cl)*0.5;
+          surface=mix(surface,vec3(1.0),cl*uDetail);
+          float nMask=smoothstep(0.05,-0.2,dot(vNormal,uLightDir));
+          float cityN=noise(sp*35.0);
+          float cities=smoothstep(0.78,0.9,cityN)*landMask*(1.0-cl*2.0);
+          vec3 nightGlow=vec3(1.0,0.76,0.32)*cities*nMask*0.5*uDetail;
+          gl_FragColor=vec4(surface*diff+nightGlow,1.0);
+        }`
+    });
+  }
+
+  _createPlanetMaterial(color1, color2, type) {
+    // type: 0=rocky, 1=gas giant bands, 2=earth, 3=ice giant
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uColor1: { value: new THREE.Color(color1) },
+        uColor2: { value: new THREE.Color(color2) },
+        uLightDir: { value: new THREE.Vector3(1, 0.5, 0.3).normalize() },
+        uDetail: { value: 0.0 },
+        uType: { value: type },
+        uTime: { value: 0.0 }
+      },
+      vertexShader: `varying vec3 vNormal; varying vec3 vPos;
+        void main(){ vNormal=normalize(normalMatrix*normal); vPos=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+      fragmentShader: `uniform vec3 uColor1; uniform vec3 uColor2; uniform vec3 uLightDir;
+        uniform float uDetail; uniform int uType; uniform float uTime;
+        varying vec3 vNormal; varying vec3 vPos;
+        float hash(vec3 p){ return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453); }
+        float noise(vec3 p){ vec3 i=floor(p); vec3 f=fract(p); f=f*f*(3.0-2.0*f);
+          return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),
+            mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z); }
+        void main(){
+          vec3 sp=normalize(vPos);
+          float diff=smoothstep(-0.1,0.8,dot(vNormal,uLightDir))*0.85+0.08;
+          float n; vec3 col; vec3 nightGlow=vec3(0.0);
+          if(uType==1){
+            float bands=sin(sp.y*28.0+noise(sp*3.0+vec3(uTime*0.05))*2.5)*0.5+0.5;
+            float detail=noise(sp*10.0+vec3(uTime*0.02,0,0))*0.3;
+            n=bands+detail;
+            col=mix(uColor2,uColor1,n*uDetail+0.5*(1.0-uDetail));
+          }else if(uType==2){
+            // Domain-warped continents
+            vec3 w=sp*3.5+vec3(noise(sp*2.5)*0.7,noise(sp*2.5+100.0)*0.7,noise(sp*2.5+200.0)*0.7);
+            float cont=noise(w)*0.55+noise(w*2.0)*0.28+noise(w*4.5)*0.17;
+            float land=smoothstep(0.47,0.53,cont);
+            // Ocean: deep to shallow near coasts
+            vec3 deepSea=vec3(0.01,0.04,0.2);
+            vec3 shallowSea=vec3(0.06,0.18,0.4);
+            vec3 ocean=mix(deepSea,shallowSea,smoothstep(0.34,0.47,cont));
+            // Land: green/brown from moisture + elevation
+            float moisture=noise(sp*5.0+50.0);
+            float elev=noise(sp*12.0)*0.55+noise(sp*24.0)*0.3;
+            vec3 forest=vec3(0.1,0.3,0.06);
+            vec3 dry=vec3(0.55,0.44,0.24);
+            vec3 mount=vec3(0.36,0.28,0.18);
+            vec3 landC=mix(dry,forest,smoothstep(0.35,0.6,moisture));
+            landC=mix(landC,mount,smoothstep(0.55,0.82,elev));
+            // Ice caps
+            float ice=smoothstep(0.68,0.84,abs(sp.y));
+            // Combine surface
+            vec3 surface=mix(ocean,landC,land);
+            surface=mix(surface,vec3(0.93,0.96,0.99),ice);
+            // Cloud layer (animated)
+            float cl=noise(sp*4.0+vec3(uTime*0.04,0.0,uTime*0.02))*0.5+noise(sp*8.0+vec3(uTime*0.06,0.0,0.0))*0.3+noise(sp*16.0+vec3(uTime*0.03,0.0,0.0))*0.2;
+            cl=smoothstep(0.4,0.7,cl)*0.5;
+            surface=mix(surface,vec3(1.0),cl*uDetail);
+            col=mix(mix(uColor1,uColor2,0.5),surface,uDetail);
+            // City lights on night side
+            float nMask=smoothstep(0.05,-0.2,dot(vNormal,uLightDir));
+            float cityN=noise(sp*35.0);
+            float cities=smoothstep(0.78,0.9,cityN)*land*(1.0-ice)*(1.0-cl*2.0);
+            nightGlow=vec3(1.0,0.76,0.32)*cities*nMask*0.5*uDetail;
+          }else if(uType==3){
+            float bands=sin(sp.y*15.0+noise(sp*4.0)*1.5)*0.3+0.5;
+            n=bands+noise(sp*8.0)*0.2;
+            col=mix(uColor2,uColor1,n*uDetail+0.5*(1.0-uDetail));
+          }else{
+            n=noise(sp*6.0)*0.5+noise(sp*12.0)*0.25+noise(sp*24.0)*0.125;
+            col=mix(uColor2,uColor1,n*uDetail+0.5*(1.0-uDetail));
+          }
+          gl_FragColor=vec4(col*diff+nightGlow,1.0);
+        }`
+    });
+  }
+
+  // --- PLANET DETAIL: Titan moon for Saturn close-up ---
+  _createPlanetDetail() {
+    this._detailGroup = new THREE.Group();
+    this._detailGroup.visible = false;
+    this.scene.add(this._detailGroup);
+
+    // Small moon (Titan)
+    this._detailMoon = new THREE.Mesh(
+      new THREE.SphereGeometry(0.035, 12, 8),
+      new THREE.MeshBasicMaterial({ color: 0xe8d8c0, transparent: true })
+    );
+    this._detailGroup.add(this._detailMoon);
+    this._detailMoonAngle = 0;
+  }
+
+  _createPosterTexts() {
+    this._posterPlanes = {};
+    [
+      { word: 'GESTURE', pos: [-18, 6, -12], rotY: 0.15, s: 10 },
+      { word: 'COSMOS', pos: [20, -4, -18], rotY: -0.2, s: 11 },
+      { word: 'SIGNAL', pos: [-6, -9, -10], rotY: 0.05, s: 7 },
+      { word: 'ORBIT', pos: [12, 8, -6], rotY: -0.1, s: 6 }
+    ].forEach(cfg => {
+      const c = document.createElement('canvas'), fs = 120;
+      c.height = fs * 1.3;
+      const ctx = c.getContext('2d');
+      ctx.font = `900 ${fs}px "Archivo Black",sans-serif`;
+      c.width = Math.ceil(ctx.measureText(cfg.word).width) + 40;
+      ctx.font = `900 ${fs}px "Archivo Black",sans-serif`;
+      ctx.fillStyle = '#f4ecff'; ctx.textBaseline = 'top'; ctx.fillText(cfg.word, 20, 10);
+      const tex = new THREE.CanvasTexture(c);
+      const aspect = c.width / c.height;
+      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.04, depthWrite: false, side: THREE.DoubleSide });
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(cfg.s * aspect, cfg.s), mat);
+      mesh.position.set(...cfg.pos); mesh.rotation.y = cfg.rotY;
+      this.scene.add(mesh);
+      this._posterPlanes[cfg.word.toLowerCase()] = { mesh, mat, basePos: [...cfg.pos] };
+    });
+  }
+
+  _initPostProcessing() {
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(new RenderPass(this.scene, this.camera));
+    this._bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.35, 0.3, 0.88);
+    this.composer.addPass(this._bloom);
+  }
+
+  // --- MAIN UPDATE ---
+  update(gesture, time) {
+    if (this.disposed) return;
+    const t = time * 0.001;
+    const p = this.params;
+
+    // Smooth zoom
+    this._targetZoom = gesture.zoomLevel !== undefined ? gesture.zoomLevel : this._targetZoom;
+    this.zoomLevel = lerp(this.zoomLevel, this._targetZoom, 0.06);
+    const z = this.zoomLevel;
+
+    // Camera: zoom drives distance — adjusted for larger solar system
+    // z=0 → far (galaxy, dist=65), z=0.5 → mid (orbit, dist=22), z=1.0 → close (planet, dist=1.5)
+    const camDist = z < 0.5
+      ? lerp(90, 22, z * 2)
+      : lerp(22, 1.5, (z - 0.5) * 2);
+    const camHeight = z < 0.5
+      ? lerp(40, 6, z * 2)
+      : lerp(6, 0.2, (z - 0.5) * 2);
+
+    const targetYaw = gesture.x * (0.5 + z * 0.6);
+    const targetPitch = gesture.y * 0.35;
+    p.rotY += (targetYaw - p.rotY) * 0.1;
+    p.rotX += (targetPitch - p.rotX) * 0.1;
+
+    // Focus planet for close-up
+    let focusPos = new THREE.Vector3(0, 0, 0);
+    if (z > 0.6 && this._planets.length > this._focusPlanetIdx) {
+      focusPos.copy(this._planets[this._focusPlanetIdx].worldPos);
+    }
+    const lookTarget = new THREE.Vector3().lerpVectors(new THREE.Vector3(0, 0, 0), focusPos, smoothstep(0.5, 0.8, z));
+
+    this.camera.position.x = lookTarget.x + Math.sin(p.rotY) * camDist;
+    this.camera.position.z = lookTarget.z + Math.cos(p.rotY) * camDist;
+    this.camera.position.y = lookTarget.y + camHeight + p.rotX * 2;
+    this.camera.lookAt(lookTarget);
+
+    // Gesture effects
+    if (gesture.gesture === 'fist') {
+      if (p.pulseEnergy < 0.1) p.pulseEnergy = 1;
+      p.disturbAmount = 0.5;
+      p.posterAlpha.signal = 0.4;
+    }
+
+    // Openness drives orbit glow — very open hand brightens orbits
+    const openness = gesture.openness !== undefined ? gesture.openness : 0.5;
+    const orbitTarget = openness > 0.65 ? (openness - 0.65) / 0.35 : 0;
+    p.orbitBrightness = lerp(p.orbitBrightness, orbitTarget, 0.08);
+    if (orbitTarget === 0) p.orbitBrightness = lerp(p.orbitBrightness, 0, 0.04);
+
+    // Hand horizontal velocity → rotation with inertia (galaxy or orrery based on zoom)
+    const vx = gesture.velocityX || 0;
+    if (Math.abs(vx) > 0.12) {
+      this._spinVelocity += vx * 0.0015;
+      this._spinVelocity = clamp(this._spinVelocity, -0.04, 0.04);
+      this._stillFrames = 0;
+    } else if (gesture.gesture !== 'none') {
+      this._stillFrames++;
+    }
+    // Auto-brake: hand detected but still for ~30 frames (0.5s) → strong friction
+    const friction = this._stillFrames > 30 ? 0.82 : 0.98;
+    this._spinVelocity *= friction;
+    const galaxySpin = smoothstep(0.35, 0.15, z); // 1 at galaxy, 0 at orbit
+    const orrerySpin = 1 - galaxySpin;
+    this._orreryGroup.rotation.y += this._spinVelocity * orrerySpin;
+    this._galaxyGroup.rotation.y += this._spinVelocity * galaxySpin;
+
+    // Hand movement speed → time acceleration (fast hand = fast cosmos)
+    const vel = gesture.velocity || 0;
+    const targetTimeScale = 1 + vel * vel * 8;
+    this._timeScale = lerp(this._timeScale, targetTimeScale, 0.08);
+    if (vel > 0.3) p.posterAlpha.gesture = 0.15 + vel * 0.2;
+    p.pulseEnergy *= 0.94;
+    p.disturbAmount *= 0.92;
+    Object.keys(p.posterAlpha).forEach(k => { p.posterAlpha[k] = lerp(p.posterAlpha[k], 0.04, 0.03); });
+
+    // LOD visibility
+    const galaxyAlpha = smoothstep(0.45, 0.15, z);
+    const detailAlpha = smoothstep(0.7, 0.9, z);
+
+    // Galaxy
+    this._galaxy.material.opacity = galaxyAlpha;
+    this._galaxy.visible = galaxyAlpha > 0.01;
+    this._galaxyCore.material.opacity = galaxyAlpha * 0.8;
+    this._galaxyCore.visible = galaxyAlpha > 0.01;
+    // Differential rotation — inner stars orbit faster
+    if (this._galaxy.visible && this._galaxyPositions) {
+      const posArr = this._galaxyPositions;
+      const angles = this._galaxyAngles;
+      const radii = this._galaxyRadii;
+      const dt = 0.0003 * this._timeScale;
+      for (let i = 0; i < angles.length; i++) {
+        const speed = dt / Math.sqrt(Math.max(radii[i], 3));
+        angles[i] += speed;
+        posArr[i * 3]     = Math.cos(angles[i]) * radii[i];
+        posArr[i * 3 + 2] = Math.sin(angles[i]) * radii[i];
+      }
+      this._galaxy.geometry.attributes.position.needsUpdate = true;
+    }
+    this._galaxyBulge.material.opacity = galaxyAlpha;
+    this._galaxyBulge.visible = galaxyAlpha > 0.01;
+    this._galaxyBulge.rotation.y = t * 0.015 * this._timeScale;
+
+    // Nebulae follow galaxy visibility
+    if (this._nebulae) this._nebulae.forEach(n => {
+      n.material.opacity = n.material.opacity * 0.95 + (galaxyAlpha > 0.1 ? n.userData.baseOpacity || 0.1 : 0) * 0.05;
+      n.visible = galaxyAlpha > 0.05;
+    });
+
+    // Solar system — scale down when zooming to galaxy so it fits inside
+    this._orreryGroup.visible = z > 0.05;
+    const orrScale = z < 0.35 ? lerp(0.008, 1, smoothstep(0.1, 0.35, z)) : 1;
+    this._orreryGroup.scale.setScalar(orrScale);
+    const orrAlpha = smoothstep(0.1, 0.25, z) * (1 - smoothstep(0.92, 1.0, z));
+    if (this._star.material.uniforms) {
+      this._star.material.uniforms.uOpacity.value = orrAlpha;
+      this._star.material.uniforms.uTime.value = t;
+    }
+    const pulseScale = 1 + p.pulseEnergy * 0.5;
+    this._star.scale.setScalar(pulseScale);
+
+    // (orbit lines removed)
+
+    this._planets.forEach((pl, i) => {
+      const disturbNoise = p.disturbAmount * Math.sin(t * 12 + pl.angle * 3) * 0.15;
+      pl.angle += (pl.baseSpeed + disturbNoise) * 0.016 * this._timeScale;
+      pl.mesh.position.x = Math.cos(pl.angle) * pl.rx;
+      pl.mesh.position.z = Math.sin(pl.angle) * pl.ry;
+      pl.mesh.position.y = 0;
+      pl.mesh.rotation.y += pl.spin;
+      pl.mesh.getWorldPosition(pl.worldPos);
+
+      // Planet material detail + time based on zoom
+      if (pl.mesh.material.uniforms) {
+        pl.mesh.material.uniforms.uDetail.value = smoothstep(0.4, 0.8, z);
+        pl.mesh.material.uniforms.uTime.value = t;
+      }
+
+      // Saturn's ring follows planet
+      if (pl.ringMesh) {
+        pl.ringMesh.position.copy(pl.mesh.position);
+        if (pl.ringMesh.material.uniforms) {
+          pl.ringMesh.material.uniforms.uOpacity.value = 0.4 * orrAlpha;
+        } else {
+          pl.ringMesh.material.opacity = 0.4 * orrAlpha;
+        }
+      }
+
+      // Atmosphere visibility
+      if (pl.atmoMesh) {
+        pl.atmoMesh.position.copy(pl.mesh.position);
+        pl.atmoMesh.material.uniforms.uOpacity.value = smoothstep(0.3, 0.6, z);
+      }
+    });
+
+    // Detail moon for Saturn close-up
+    if (this._planets.length > this._focusPlanetIdx) {
+      const fp = this._planets[this._focusPlanetIdx];
+      this._detailGroup.visible = detailAlpha > 0.05;
+      this._detailGroup.position.copy(fp.worldPos);
+      this._detailMoonAngle += 0.015;
+      this._detailMoon.position.set(
+        Math.cos(this._detailMoonAngle) * fp.r * 3.5,
+        Math.sin(this._detailMoonAngle * 0.7) * fp.r * 0.8,
+        Math.sin(this._detailMoonAngle) * fp.r * 3.5
+      );
+      this._detailMoon.material.opacity = detailAlpha;
+    }
+
+    // Poster text
+    Object.entries(this._posterPlanes).forEach(([key, pp]) => {
+      const baseA = p.posterAlpha[key] || 0.04;
+      pp.mat.opacity = baseA * (1 - smoothstep(0.75, 1.0, z));
+    });
+    if (this._posterPlanes.gesture) {
+      const g = this._posterPlanes.gesture;
+      g.mesh.position.x = g.basePos[0] + p.disturbAmount * Math.sin(t * 15) * 0.5;
+    }
+
+    // Camera shake
+    if (p.disturbAmount > 0.05) {
+      this.camera.position.x += (Math.random() - 0.5) * p.disturbAmount * 0.04;
+      this.camera.position.y += (Math.random() - 0.5) * p.disturbAmount * 0.04;
+    }
+
+    // Bloom intensity based on zoom
+    this._bloom.strength = lerp(0.2, 0.4, smoothstep(0.3, 0.6, z));
+
+    this.composer.render();
+  }
+
+  resize() {
+    if (this.disposed) return;
+    const w = window.innerWidth, h = window.innerHeight;
+    this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(w, h);
+    this.composer.setSize(w, h);
+  }
+
+  dispose() {
+    this.disposed = true;
+    this.scene.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach(m => {
+          if (m.uniforms) Object.values(m.uniforms).forEach(u => { if (u.value instanceof THREE.Texture) u.value.dispose(); });
+          Object.values(m).forEach(v => { if (v instanceof THREE.Texture) v.dispose(); });
+          m.dispose();
+        });
+      }
+    });
+    this.composer.dispose();
+    this.renderer.dispose();
+  }
+}
+
+// ============================================================
+//  APP CONTROLLER
+// ============================================================
+const introEl = document.getElementById('intro');
+const labEl = document.getElementById('lab');
+const loadingEl = document.getElementById('lab-loading');
+const loadingFill = document.getElementById('loading-fill');
+const skipBtn = document.getElementById('skip-gesture-btn');
+const hintsEl = document.getElementById('lab-hints');
+const dotCamera = document.getElementById('dot-camera');
+const dotGesture = document.getElementById('dot-gesture');
+const dotInput = document.getElementById('dot-input');
+const statusCamera = document.getElementById('status-camera');
+const statusGesture = document.getElementById('status-gesture');
+const statusInput = document.getElementById('status-input');
+
+let cosmosScene = null;
+let gestureSource = null;
+let animationId = null;
+let labActive = false;
+
+function enterLab(skipTransition = false) {
+  if (labActive) return;
+  labActive = true;
+
+  document.querySelectorAll('.chrome-logo, .chrome-close')
+    .forEach(el => el.style.display = 'none');
+
+  if (skipTransition) {
+    introEl.style.display = 'none';
+    labEl.style.transition = 'none';
+    labEl.classList.add('active', 'visible');
+    labEl.offsetHeight;
+    labEl.style.transition = '';
+  } else {
+    introEl.classList.add('fade-out');
+    labEl.classList.add('active');
+    getComputedStyle(labEl).opacity;
+    setTimeout(() => labEl.classList.add('visible'), 20);
+  }
+
+  // Show loading immediately
+  loadingEl.classList.remove('hidden');
+  loadingFill.style.width = '10%';
+
+  // Init scene
+  cosmosScene = new CosmosScene(document.getElementById('space-canvas'));
+  gestureSource = new GestureSource();
+  loadingFill.style.width = '30%';
+
+  function animate(time) {
+    if (!labActive) return;
+    gestureSource.processVideoFrame(time);
+    cosmosScene._targetZoom = gestureSource.zoomLevel;
+    cosmosScene.update({ ...gestureSource.state, zoomLevel: gestureSource.zoomLevel }, time);
+    updateLabUI(gestureSource.state);
+    animationId = requestAnimationFrame(animate);
+  }
+  animationId = requestAnimationFrame(animate);
+
+  initGesture();
+
+  setTimeout(() => hintsEl?.classList.add('hidden'), 6000);
+
+  if (new URLSearchParams(window.location.search).has('dev')) {
+    gestureSource.enableSimulator();
+  }
+
+  window.addEventListener('resize', onLabResize);
+  document.addEventListener('visibilitychange', onVisibility);
+  window.location.hash = 'lab';
+}
+
+async function initGesture() {
+  const loadStart = performance.now();
+
+  const skipTimer = setTimeout(() => skipBtn.classList.add('show'), 3000);
+
+  skipBtn.addEventListener('click', () => {
+    clearTimeout(skipTimer);
+    gestureSource.enableMouseFallback();
+    gestureSource._enableTouch();
+    finishLoading();
+    updateInputStatus('mouse');
+  }, { once: true });
+
+  loadingFill.style.width = '50%';
+
+  try {
+    await gestureSource.initCamera();
+    loadingFill.style.width = '90%';
+
+    if (gestureSource.state.cameraStatus === 'blocked') {
+      gestureSource.enableMouseFallback();
+      gestureSource._enableTouch();
+      updateInputStatus(gestureSource._isMobile() ? 'touch' : 'mouse');
+    } else {
+      gestureSource.enableMouseFallback();
+      updateInputStatus('camera');
+    }
+  } catch (e) {
+    gestureSource.enableMouseFallback();
+    gestureSource._enableTouch();
+    updateInputStatus('mouse');
+  }
+
+  loadingFill.style.width = '100%';
+
+  // Ensure loading is visible for at least 1.5s so user sees it
+  const elapsed = performance.now() - loadStart;
+  const remaining = Math.max(0, 1500 - elapsed);
+  setTimeout(() => finishLoading(), remaining);
+
+  function finishLoading() {
+    clearTimeout(skipTimer);
+    skipBtn.classList.remove('show');
+    loadingEl.style.transition = 'opacity 0.6s ease';
+    loadingEl.style.opacity = '0';
+    setTimeout(() => { loadingEl.classList.add('hidden'); loadingEl.style.opacity = ''; loadingEl.style.transition = ''; }, 600);
+  }
+}
+
+function exitLab() {
+  if (!labActive) return;
+  labActive = false;
+
+  if (animationId) cancelAnimationFrame(animationId);
+  if (gestureSource) gestureSource.releaseCamera();
+  if (cosmosScene) cosmosScene.dispose();
+  cosmosScene = null;
+  gestureSource = null;
+
+  labEl.classList.remove('visible');
+  setTimeout(() => {
+    labEl.classList.remove('active');
+    introEl.classList.remove('fade-out');
+    introEl.style.display = '';
+    document.querySelectorAll('.chrome-logo, .chrome-close')
+      .forEach(el => el.style.display = '');
+  }, 600);
+
+  window.removeEventListener('resize', onLabResize);
+  document.removeEventListener('visibilitychange', onVisibility);
+  window.location.hash = 'intro';
+}
+
+function onLabResize() { if (cosmosScene) cosmosScene.resize(); }
+function onVisibility() {}
+
+function updateLabUI(state) {
+  const camMap = {
+    'idle': ['dot-idle', '待机'], 'requesting': ['dot-idle', '请求中'],
+    'ready': ['dot-active', '已授权'], 'tracking': ['dot-active', '追踪中'],
+    'blocked': ['dot-error', 'blocked'], 'error': ['dot-error', 'error']
+  };
+  const cam = camMap[state.cameraStatus] || ['dot-idle', '—'];
+  dotCamera.className = 'dot ' + cam[0];
+  statusCamera.textContent = cam[1];
+
+  if (state.handDetected) {
+    dotGesture.className = 'dot dot-active'; statusGesture.textContent = state.gesture;
+  } else if (state.confidence < 0.3 && state.cameraStatus === 'tracking') {
+    dotGesture.className = 'dot dot-error'; statusGesture.textContent = 'signal weak';
+  } else {
+    dotGesture.className = 'dot dot-idle'; statusGesture.textContent = state.cameraStatus === 'tracking' ? 'signal lost' : 'none';
+  }
+
+  dotInput.className = 'dot dot-active';
+  statusInput.textContent = state.source;
+}
+
+function updateInputStatus(source) {
+  dotInput.className = 'dot dot-active';
+  statusInput.textContent = source;
+}
+
+document.querySelectorAll('.enter-experiment').forEach(btn => {
+  btn.addEventListener('click', (e) => { e.preventDefault(); enterLab(); });
+});
+document.querySelector('.lab-close')?.addEventListener('click', exitLab);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && labActive) exitLab(); });
+
+if (window.location.hash === '#lab') {
+  setTimeout(() => enterLab(true), 50);
+}
 </script>
 </body>
 </html>
-
-
