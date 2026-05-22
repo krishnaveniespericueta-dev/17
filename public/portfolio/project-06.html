@@ -548,7 +548,7 @@ class GestureSource extends EventTarget {
     this.zoomLevel = 0.5;
     this._wristHistory = [];
     this._opennessSmoothed = null;
-    this._lastOpenness = null;
+    this._openBaseline = null;
     this._zoomVelocity = 0;
     this._zoomIntent = 'hold';
     this._gestureBuffer = [];
@@ -629,6 +629,9 @@ class GestureSource extends EventTarget {
       this.state.handDetected = false;
       if (this.state.cameraStatus === 'tracking') this.state.cameraStatus = 'ready';
       this.state.confidence = Math.max(0, this.state.confidence - 0.02);
+      this._zoomVelocity *= 0.72;
+      this._zoomIntent = 'hold';
+      this.state.zoomIntent = 'hold';
     }
     this._emit();
   }
@@ -674,21 +677,32 @@ class GestureSource extends EventTarget {
       ? rawOpenness
       : this._opennessSmoothed * 0.72 + rawOpenness * 0.28;
 
-    const delta = this._lastOpenness === null ? 0 : this._opennessSmoothed - this._lastOpenness;
-    this._lastOpenness = this._opennessSmoothed;
     this.state.openness = this._opennessSmoothed;
-
-    const deadDelta = 0.006;
-    const zoomStep = Math.abs(delta) > deadDelta ? clamp(-delta * 0.9, -0.035, 0.035) : 0;
-    this._zoomVelocity = this._zoomVelocity * 0.74 + zoomStep * 0.26;
-
-    if (Math.abs(this._zoomVelocity) > 0.0008) {
-      this.zoomLevel = clamp(this.zoomLevel + this._zoomVelocity, 0, 1);
+    if (this._openBaseline === null) {
+      this._openBaseline = this._opennessSmoothed;
+      this.state.zoomIntent = 'hold';
+      this.state.scale = 0.3 + this.zoomLevel * 2.7;
+      return;
     }
 
-    if (zoomStep < -0.003) this._zoomIntent = 'openPalm';
-    else if (zoomStep > 0.003) this._zoomIntent = 'closePalm';
-    else this._zoomIntent = 'hold';
+    const deadZone = 0.085;
+    const dev = this._opennessSmoothed - this._openBaseline;
+    const activeMag = Math.abs(dev) - deadZone;
+    let targetVelocity = 0;
+
+    if (activeMag > 0) {
+      // Open palm keeps zooming out; closed palm keeps zooming in.
+      const dir = dev > 0 ? -1 : 1;
+      targetVelocity = dir * clamp(activeMag * 0.035, 0.0025, 0.012);
+      this._zoomIntent = dir < 0 ? 'openPalm' : 'closePalm';
+    } else {
+      this._zoomIntent = 'hold';
+      this._openBaseline = this._openBaseline * 0.985 + this._opennessSmoothed * 0.015;
+    }
+
+    this._zoomVelocity = this._zoomVelocity * 0.58 + targetVelocity * 0.42;
+    if (Math.abs(this._zoomVelocity) < 0.00045) this._zoomVelocity = 0;
+    if (this._zoomVelocity !== 0) this.zoomLevel = clamp(this.zoomLevel + this._zoomVelocity, 0, 1);
 
     this.state.zoomIntent = this._zoomIntent;
     this.state.scale = 0.3 + this.zoomLevel * 2.7;
