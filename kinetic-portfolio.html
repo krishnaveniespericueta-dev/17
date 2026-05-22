@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -828,6 +828,7 @@
   let lastPointerX = null;
   let lastPointerY = null;
   let hoveredProject = null;
+  let hoverFrame = 0;
   let isNavigating = false;
   let aboutCloseTimer = null;
   const aboutTransitionMs = 680;
@@ -850,7 +851,7 @@
   addEventListener('wheel', moveProjects, {passive:false});
   addEventListener('keydown', moveProjectsWithKeys);
   addEventListener('pointermove', trackProjectHover, {passive:true});
-  addEventListener('mousemove', trackProjectHover, {passive:true});
+  if (!('PointerEvent' in window)) addEventListener('mousemove', trackProjectHover, {passive:true});
   addEventListener('pointerleave', clearProjectHover);
   addEventListener('mouseleave', clearProjectHover);
   addEventListener('blur', clearProjectHover);
@@ -1012,6 +1013,7 @@
       target *= scale;
     }
     stageContainer.style.height = `${innerHeight}px`;
+    if (projects.dataset.loopReady) applyProjectsTransform();
   }
 
   function moveProjects(event){
@@ -1047,7 +1049,11 @@
     if (isNavigating || document.body.classList.contains('outro')) return;
     lastPointerX = event.clientX;
     lastPointerY = event.clientY;
-    refreshHoverFromLastPointer({force:true});
+    if (hoverFrame) return;
+    hoverFrame = requestAnimationFrame(() => {
+      hoverFrame = 0;
+      refreshHoverFromLastPointer({force:true});
+    });
   }
 
   function refreshHoverFromLastPointer(options = {}){
@@ -1101,6 +1107,10 @@
   }
 
   function clearProjectHover(){
+    if (hoverFrame) {
+      cancelAnimationFrame(hoverFrame);
+      hoverFrame = 0;
+    }
     if (!hoveredProject && !projects.classList.contains('isHovering')) return;
     projectItems.forEach((project) => project.classList.remove('isHovered'));
     hoveredProject = null;
@@ -1142,15 +1152,19 @@
 
   function render(){
     const distance = target - current;
+    const wasMoving = Math.abs(distance) > 0.01;
     const maxFrameStep = Math.max(80, innerHeight * 0.13);
     const easedStep = distance * 0.09;
     current += Math.max(-maxFrameStep, Math.min(maxFrameStep, easedStep));
     if (Math.abs(target - current) < 0.01) current = target;
+    const isMoving = wasMoving || Math.abs(target - current) > 0.01;
 
     if (!isNavigating && !document.body.classList.contains('outro')) {
-      recycleProjectItems();
-      applyProjectsTransform();
-      if (Math.abs(target - current) > 0.01) refreshHoverFromLastPointer();
+      if (isMoving) {
+        recycleProjectItems();
+        applyProjectsTransform();
+        refreshHoverFromLastPointer();
+      }
     } else {
       applyProjectsTransform();
     }
@@ -1163,4 +1177,3 @@
 </script>
 </body>
 </html>
-

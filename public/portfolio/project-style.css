@@ -256,6 +256,8 @@ body.work-page:not(.loading) h1{
 }
 .codex-section{
   margin:10vh 0;
+  content-visibility:auto;
+  contain-intrinsic-size:900px;
 }
 .codex-heading{
   display:grid;
@@ -445,6 +447,8 @@ body.work-page.is-scrolled .logo{
 }
 .error-section{
   margin:11vh 0;
+  content-visibility:auto;
+  contain-intrinsic-size:900px;
 }
 .error-statement{
   display:grid;
@@ -1046,6 +1050,8 @@ body.work-page.is-scrolled .logo{
   display:flex;
   flex-direction:column;
   min-height:320px;
+  content-visibility:auto;
+  contain-intrinsic-size:520px;
   padding:28px;
   border-top:2px solid var(--ink);
   background:rgba(72,1,255,.05);
