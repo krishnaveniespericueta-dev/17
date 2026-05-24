@@ -10,6 +10,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/duo3tdm.css">
+<link rel="stylesheet" href="./opening.css">
+<script>
+  (function () {
+    const preview = new URLSearchParams(location.search).get('preview') || '';
+    if (/^play-/i.test(preview)) {
+      document.documentElement.classList.add('opening-preview-hold');
+    } else if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('site-opening-hold');
+    }
+  })();
+</script>
+<script src="./opening.js" defer></script>
 <style>
   @font-face{
     font-family:"Druk Wide Web";
@@ -370,6 +382,26 @@
     transition:none;
     animation:projectIntro 2s forwards;
   }
+  html.opening-preview-hold body.intro .stage,
+  html.site-opening-hold body.intro .stage{
+    transform:translate3d(0,-116%,0);
+    animation:none;
+  }
+  html.opening-preview-hold body.intro .projectContainer,
+  html.site-opening-hold body.intro .projectContainer{
+    visibility:hidden;
+    opacity:0;
+    transform:rotateY(-100deg) translateZ(0) scale(1);
+    animation:none;
+  }
+  html.opening-preview-hold body.intro.intro-active .stage,
+  html.site-opening-hold body.intro.intro-active .stage{
+    animation:stageIntro 2s forwards;
+  }
+  html.opening-preview-hold body.intro.intro-active .projectContainer,
+  html.site-opening-hold body.intro.intro-active .projectContainer{
+    animation:projectIntro 2s forwards;
+  }
   body.intro .projectsLi:nth-child(8n+1) .projectContainer{animation-delay:.9s}
   body.intro .projectsLi:nth-child(8n+2) .projectContainer{animation-delay:.8s}
   body.intro .projectsLi:nth-child(8n+3) .projectContainer{animation-delay:.7s}
@@ -702,6 +734,65 @@
 </head>
 <body class="loading intro">
   <div class="curtain" aria-hidden="true"></div>
+  <section class="site-opening" id="site-opening" aria-label="QIVENN opening animation">
+    <div class="opening-surface">
+      <svg width="0" height="0" aria-hidden="true" focusable="false">
+        <symbol id="opening-watermark" viewBox="0 0 528 270" overflow="visible" fill-rule="evenodd">
+          <path d="M14 18H100V203H73V45H41V211H65V238H14V18Z"/>
+          <polygon points="106,18 143,18 143,45 106,45"/>
+          <polygon points="116,53 133,53 133,203 116,203"/>
+          <polygon points="106,211 143,211 143,238 106,238"/>
+          <polygon points="148,18 176,18 185,188 194,188 203,18 231,18 213,238 166,238"/>
+          <polygon points="243,18 303,18 303,49 271,49 271,103 299,103 299,134 271,134 271,207 303,207 303,238 243,238"/>
+          <polygon points="315,18 343,18 367,137 367,18 394,18 394,238 366,238 342,116 342,238 315,238"/>
+          <polygon points="406,18 434,18 458,137 458,18 485,18 485,238 457,238 433,116 433,238 406,238"/>
+          <polygon points="73,211 100,211 100,238 73,238"/>
+          <path transform="translate(72.98 9.85) scale(.54875)" d="M788.74.27c-17.25.22-30.35,13.33-30.63,30.51-.29,17.99,13.46,31.97,31.97,31.43,17.82-.52,30.09-14.21,29.77-31.52-.32-17.52-13.53-30.64-31.11-30.42ZM788.25,54.96c-13.87-.58-22.63-11.3-22.42-24.28.21-12.78,9.13-22.48,22.02-23.08,14.41-.67,25.21,10.72,24.39,25.12-.73,12.84-10.35,22.81-23.99,22.24h0Z"/>
+          <path transform="translate(72.98 9.85) scale(.54875)" d="M795.03,36.48c-1.7,2.87-4.1,4.45-6.61,4.21-5.96-.58-6.2-8.8-4.93-14.34.51-2.22,3.59-4.4,5.79-4.35,6.77.16,1.51,6.68,14.44,4.1-1.88-9.24-10.31-12.63-17.94-11-7.88,1.69-12.17,8.4-12.18,16.63,0,9.54,6.43,16.37,16.25,16.05,6.73-.22,12.88-3.71,13.88-11.55-2.47-.25-6.81-.4-8.69.25h-.01Z"/>
+        </symbol>
+      </svg>
+      <div class="opening-stage" aria-hidden="true">
+        <div class="opening-montage">
+          <figure class="opening-cell" style="--i:0"><img src="./preview-thumbs/tile-01.jpg" alt="" decoding="async" fetchpriority="high"><svg class="opening-tile-mark" viewBox="0 0 528 270"><use href="#opening-watermark"></use></svg></figure>
+          <figure class="opening-cell" style="--i:1"><img src="./preview-thumbs/tile-02.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:2"><img src="./preview-thumbs/tile-03.jpg" alt="" decoding="async" fetchpriority="high"><svg class="opening-tile-mark" viewBox="0 0 528 270"><use href="#opening-watermark"></use></svg></figure>
+          <figure class="opening-cell" style="--i:3"><img src="./preview-thumbs/tile-04.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:4"><img src="./preview-thumbs/tile-05.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:5"><img src="./preview-thumbs/tile-06.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:6"><img src="./preview-thumbs/tile-07.jpg" alt="" decoding="async" fetchpriority="high"><svg class="opening-tile-mark" viewBox="0 0 528 270"><use href="#opening-watermark"></use></svg></figure>
+          <figure class="opening-cell" style="--i:7"><img src="./preview-thumbs/tile-08.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:8"><img src="./preview-thumbs/tile-09.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+          <figure class="opening-cell" style="--i:9"><img src="./preview-thumbs/tile-10.jpg" alt="" decoding="async" fetchpriority="high"></figure>
+        </div>
+      </div>
+      <div class="opening-brand" aria-hidden="true">
+        <div class="opening-mark-wrap">
+          <svg class="opening-mark" viewBox="0 0 528 270">
+            <g class="opening-logo-paths" fill-rule="evenodd">
+              <path style="--delay:0s" d="M14 18H100V203H73V45H41V211H65V238H14V18Z"/>
+              <polygon style="--delay:.12s" points="106,18 143,18 143,45 106,45"/>
+              <polygon style="--delay:.28s" points="116,53 133,53 133,203 116,203"/>
+              <polygon style="--delay:.44s" points="106,211 143,211 143,238 106,238"/>
+              <polygon style="--delay:.1s" points="148,18 176,18 185,188 194,188 203,18 231,18 213,238 166,238"/>
+              <polygon style="--delay:.22s" points="243,18 303,18 303,49 271,49 271,103 299,103 299,134 271,134 271,207 303,207 303,238 243,238"/>
+              <polygon style="--delay:.34s" points="315,18 343,18 367,137 367,18 394,18 394,238 366,238 342,116 342,238 315,238"/>
+              <polygon style="--delay:.47s" points="406,18 434,18 458,137 458,18 485,18 485,238 457,238 433,116 433,238 406,238"/>
+              <polygon style="--delay:.66s" points="73,211 100,211 100,238 73,238"/>
+              <path class="opening-copyright" style="--delay:.8s" transform="translate(72.98 9.85) scale(.54875)" d="M788.74.27c-17.25.22-30.35,13.33-30.63,30.51-.29,17.99,13.46,31.97,31.97,31.43,17.82-.52,30.09-14.21,29.77-31.52-.32-17.52-13.53-30.64-31.11-30.42ZM788.25,54.96c-13.87-.58-22.63-11.3-22.42-24.28.21-12.78,9.13-22.48,22.02-23.08,14.41-.67,25.21,10.72,24.39,25.12-.73,12.84-10.35,22.81-23.99,22.24h0Z"/>
+              <path class="opening-copyright" style="--delay:.92s" transform="translate(72.98 9.85) scale(.54875)" d="M795.03,36.48c-1.7,2.87-4.1,4.45-6.61,4.21-5.96-.58-6.2-8.8-4.93-14.34.51-2.22,3.59-4.4,5.79-4.35,6.77.16,1.51,6.68,14.44,4.1-1.88-9.24-10.31-12.63-17.94-11-7.88,1.69-12.17,8.4-12.18,16.63,0,9.54,6.43,16.37,16.25,16.05,6.73-.22,12.88-3.71,13.88-11.55-2.47-.25-6.81-.4-8.69.25h-.01Z"/>
+            </g>
+          </svg>
+        </div>
+        <div class="opening-tagline">sustainable quality horizon</div>
+      </div>
+      <button class="opening-skip" type="button">Skip -&gt;</button>
+      <div class="opening-grain"></div>
+    </div>
+    <div class="opening-doors" aria-hidden="true">
+      <span class="opening-door opening-door-left"></span>
+      <span class="opening-door opening-door-right"></span>
+    </div>
+  </section>
 
   <div class="stagePerspective" id="stagePerspective">
     <div class="stageContainer" id="stageContainer">
@@ -832,20 +923,47 @@
   let isNavigating = false;
   let aboutCloseTimer = null;
   const aboutTransitionMs = 680;
+  const openingPreviewHold = document.documentElement.classList.contains('opening-preview-hold');
+  const siteOpeningHold = document.documentElement.classList.contains('site-opening-hold');
+  let homeIntroStarted = false;
+  let homeIntroFallback = 0;
 
   buildProjectLoop();
-  requestAnimationFrame(() => document.body.classList.add('ready'));
-  setTimeout(() => {
-    document.body.classList.remove('loading');
-  }, 80);
-  setTimeout(() => {
-    stageContainer.style.opacity = 1;
-  }, 300);
-  setTimeout(() => {
-    document.body.classList.remove('intro');
-    resizeLoop();
-    recycleProjectItems(true);
-  }, 2900);
+
+  function startHomeIntro(){
+    if (homeIntroStarted) return;
+    homeIntroStarted = true;
+    requestAnimationFrame(() => document.body.classList.add('ready'));
+    document.body.classList.add('intro-active');
+    setTimeout(() => {
+      document.body.classList.remove('loading');
+    }, 80);
+    setTimeout(() => {
+      stageContainer.style.opacity = 1;
+    }, 300);
+    setTimeout(() => {
+      document.body.classList.remove('intro', 'intro-active');
+      resizeLoop();
+      recycleProjectItems(true);
+    }, 2900);
+  }
+
+  if (openingPreviewHold) {
+    homeIntroFallback = setTimeout(startHomeIntro, 1800);
+    addEventListener('message', (event) => {
+      if (!event.data || event.data.type !== 'qivenn:start-home-intro') return;
+      clearTimeout(homeIntroFallback);
+      startHomeIntro();
+    });
+  } else if (siteOpeningHold) {
+    homeIntroFallback = setTimeout(startHomeIntro, 12500);
+    addEventListener('qivenn:home-intro', () => {
+      clearTimeout(homeIntroFallback);
+      startHomeIntro();
+    }, { once:true });
+  } else {
+    startHomeIntro();
+  }
 
   addEventListener('resize', resizeLoop, {passive:true});
   addEventListener('wheel', moveProjects, {passive:false});
