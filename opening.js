@@ -36,9 +36,9 @@
   function playOpening() {
     measurePaths();
     opening.classList.add('is-run');
-    schedule(() => opening.classList.add('is-filled'), 5750);
-    schedule(() => opening.classList.add('is-finished'), 9870);
-    schedule(dispatchHomepageIntro, 10750);
+    schedule(() => opening.classList.add('is-filled'), 4870);
+    schedule(() => opening.classList.add('is-finished'), 8350);
+    schedule(dispatchHomepageIntro, 8480);
   }
 
   function skipOpening() {

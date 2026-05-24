@@ -14,10 +14,22 @@
 <script>
   (function () {
     const preview = new URLSearchParams(location.search).get('preview') || '';
+    const openingSessionKey = 'qivenn-opening-shown';
+    let openingWasShown = false;
+    try {
+      openingWasShown = sessionStorage.getItem(openingSessionKey) === '1';
+    } catch (error) {
+      openingWasShown = false;
+    }
     if (/^play-/i.test(preview)) {
       document.documentElement.classList.add('opening-preview-hold');
-    } else if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    } else if (!openingWasShown && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('site-opening-hold');
+      try {
+        sessionStorage.setItem(openingSessionKey, '1');
+      } catch (error) {
+        /* Continue without a remembered opening when storage is unavailable. */
+      }
     }
   })();
 </script>
@@ -375,12 +387,12 @@
   }
   body.intro .stage{
     transform:translate3d(0,-110%,0);
-    animation:stageIntro 2s forwards;
+    animation:stageIntro 1.45s forwards;
   }
   body.intro .projectContainer{
     visibility:hidden;
     transition:none;
-    animation:projectIntro 2s forwards;
+    animation:projectIntro 1.45s forwards;
   }
   html.opening-preview-hold body.intro .stage,
   html.site-opening-hold body.intro .stage{
@@ -396,20 +408,20 @@
   }
   html.opening-preview-hold body.intro.intro-active .stage,
   html.site-opening-hold body.intro.intro-active .stage{
-    animation:stageIntro 2s forwards;
+    animation:stageIntro 1.45s forwards;
   }
   html.opening-preview-hold body.intro.intro-active .projectContainer,
   html.site-opening-hold body.intro.intro-active .projectContainer{
-    animation:projectIntro 2s forwards;
+    animation:projectIntro 1.45s forwards;
   }
-  body.intro .projectsLi:nth-child(8n+1) .projectContainer{animation-delay:.9s}
-  body.intro .projectsLi:nth-child(8n+2) .projectContainer{animation-delay:.8s}
-  body.intro .projectsLi:nth-child(8n+3) .projectContainer{animation-delay:.7s}
-  body.intro .projectsLi:nth-child(8n+4) .projectContainer{animation-delay:.6s}
-  body.intro .projectsLi:nth-child(8n+5) .projectContainer{animation-delay:.5s}
-  body.intro .projectsLi:nth-child(8n+6) .projectContainer{animation-delay:.4s}
-  body.intro .projectsLi:nth-child(8n+7) .projectContainer{animation-delay:.3s}
-  body.intro .projectsLi:nth-child(8n+8) .projectContainer{animation-delay:.2s}
+  body.intro .projectsLi:nth-child(8n+1) .projectContainer{animation-delay:.52s}
+  body.intro .projectsLi:nth-child(8n+2) .projectContainer{animation-delay:.45s}
+  body.intro .projectsLi:nth-child(8n+3) .projectContainer{animation-delay:.38s}
+  body.intro .projectsLi:nth-child(8n+4) .projectContainer{animation-delay:.31s}
+  body.intro .projectsLi:nth-child(8n+5) .projectContainer{animation-delay:.24s}
+  body.intro .projectsLi:nth-child(8n+6) .projectContainer{animation-delay:.17s}
+  body.intro .projectsLi:nth-child(8n+7) .projectContainer{animation-delay:.1s}
+  body.intro .projectsLi:nth-child(8n+8) .projectContainer{animation-delay:.03s}
   @keyframes stageIntro{
     0%{transform:translate3d(0,-110%,0)}
     100%{transform:translate3d(0,0,0)}
@@ -933,19 +945,17 @@
   function startHomeIntro(){
     if (homeIntroStarted) return;
     homeIntroStarted = true;
+    stageContainer.style.opacity = 1;
     requestAnimationFrame(() => document.body.classList.add('ready'));
     document.body.classList.add('intro-active');
     setTimeout(() => {
       document.body.classList.remove('loading');
     }, 80);
     setTimeout(() => {
-      stageContainer.style.opacity = 1;
-    }, 300);
-    setTimeout(() => {
       document.body.classList.remove('intro', 'intro-active');
       resizeLoop();
       recycleProjectItems(true);
-    }, 2900);
+    }, 2050);
   }
 
   if (openingPreviewHold) {
@@ -956,7 +966,7 @@
       startHomeIntro();
     });
   } else if (siteOpeningHold) {
-    homeIntroFallback = setTimeout(startHomeIntro, 12500);
+    homeIntroFallback = setTimeout(startHomeIntro, 9800);
     addEventListener('qivenn:home-intro', () => {
       clearTimeout(homeIntroFallback);
       startHomeIntro();
