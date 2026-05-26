@@ -593,6 +593,44 @@ body.work-page.is-scrolled .logo{
   font-size:15px;
   font-weight:700;
 }
+.meta b a{
+  text-decoration:none;
+}
+.meta b a:hover{
+  text-decoration:underline;
+}
+.contact-project .hero{
+  min-height:48vh;
+}
+.contact-weixin{
+  display:grid;
+  grid-template-columns:minmax(280px,1fr) 420px;
+  align-items:start;
+  gap:7vw;
+  margin:7vh 0 0;
+  padding-top:42px;
+  border-top:1px solid rgba(5,0,9,.18);
+}
+.contact-weixin h2{
+  margin:0 0 18px;
+  font-family:"Druk Wide Web",Arial,sans-serif;
+  font-size:clamp(34px,3.3vw,52px);
+  line-height:.95;
+  text-transform:uppercase;
+}
+.contact-weixin p:not(.kicker){
+  max-width:360px;
+  margin:0;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.7;
+}
+.contact-weixin img{
+  display:block;
+  width:100%;
+  height:auto;
+  background:#fff;
+}
 .media-grid{
   display:grid;
   grid-template-columns:1fr 1fr;

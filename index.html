@@ -264,6 +264,10 @@
     line-height:1;
     text-transform:lowercase;
   }
+  .contact-dialog.weixin-dialog{
+    width:min(442px,calc(100vw - var(--pad) * 2));
+    padding:26px 30px 24px;
+  }
   .modal-close{
     position:absolute;
     top:18px;
@@ -287,28 +291,12 @@
   }
   .modal-close::before{transform:translate(-50%,-50%) rotate(45deg)}
   .modal-close::after{transform:translate(-50%,-50%) rotate(-45deg)}
-  .qr-placeholder{
-    display:grid;
-    place-items:center;
-    width:210px;
-    height:210px;
-    margin:6px auto 0;
-    border:2px solid var(--ink);
-    background:
-      linear-gradient(90deg,var(--ink) 10px,transparent 10px 20px,var(--ink) 20px 30px,transparent 30px) 0 0/40px 40px,
-      linear-gradient(var(--ink) 10px,transparent 10px 20px,var(--ink) 20px 30px,transparent 30px) 0 0/40px 40px,
-      var(--paper);
-    background-blend-mode:multiply;
-  }
-  .qr-placeholder span{
-    display:grid;
-    place-items:center;
-    width:86px;
-    height:32px;
-    background:var(--paper);
-    font-family:"Archivo Black",sans-serif;
-    font-size:14px;
-    text-transform:uppercase;
+  .weixin-qr{
+    display:block;
+    width:min(100%,370px);
+    height:auto;
+    margin:4px auto 0;
+    background:#fff;
   }
   .modal-value{
     display:block;
@@ -316,6 +304,12 @@
     font-family:"Archivo Black",sans-serif;
     font-size:24px;
     line-height:1.1;
+  }
+  a.modal-value{
+    text-decoration:none;
+  }
+  a.modal-value:hover{
+    text-decoration:underline;
   }
   .modal-note{
     display:block;
@@ -889,11 +883,11 @@
   </div>
 
   <div class="contact-modal" id="weixin-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="weixin-title">
-    <div class="contact-dialog">
+    <div class="contact-dialog weixin-dialog">
       <button class="modal-close" type="button" aria-label="Close" data-modal-close></button>
       <h2 id="weixin-title">weixin</h2>
-      <div class="qr-placeholder" aria-label="Weixin QR placeholder"><span>QR</span></div>
-      <span class="modal-note">Send me your QR image and I will replace this placeholder.</span>
+      <img class="weixin-qr" src="/portfolio/contact-assets/weixin-qr.jpg" alt="孙琦浩微信二维码" decoding="async">
+      <span class="modal-note">扫描二维码，添加我的微信。</span>
     </div>
   </div>
 
@@ -901,8 +895,8 @@
     <div class="contact-dialog">
       <button class="modal-close" type="button" aria-label="Close" data-modal-close></button>
       <h2 id="tel-title">tel</h2>
-      <strong class="modal-value">Phone number pending</strong>
-      <span class="modal-note">Send me the phone number and I will put it here.</span>
+      <a class="modal-value" href="tel:15598371825">155 9837 1825</a>
+      <span class="modal-note">电话联系</span>
     </div>
   </div>
 
