@@ -1,41 +1,77 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#4801ff">
-<title>Case Experiments | 17 SHIQI</title>
+<title>QIVENN Portfolio | 17 SHIQI</title>
 <link rel="stylesheet" href="project-style.css">
 </head>
-<body class="work-page loading">
+<body class="work-page error-project method-project portfolio-project loading">
   <header class="topbar">
     <a class="logo" href="/">SQH<br>Portfolio</a>
-    <a class="back" href="/" aria-label="Back to portfolio"></a>
+    <a class="back" href="/" aria-label="返回首页"></a>
   </header>
   <main class="project">
     <section class="hero">
       <div>
-        <p class="kicker">2024 / Selected Work</p>
-        <h1>Case<br>Experiments</h1>
+        <p class="kicker">2026 / Personal Portfolio Website</p>
+        <h1>QIVENN<br>Portfolio</h1>
       </div>
-      <p class="summary">A placeholder case study for experiments, prototypes, and additional portfolio notes.</p>
+      <p class="summary">QIVENN 是为个人作品集建立的品牌名。网站以蓝紫色主场景承载持续滚动的作品标题，用黑色描线到实体的开屏标识、项目过渡动效与清晰的详情页结构，把视觉创作、AI 工作方法和互动原型组织在同一个入口中。</p>
     </section>
-    <section class="meta" aria-label="Project details">
-      <div><span>Role</span><b>Creative direction</b></div>
-      <div><span>Scope</span><b>Research, design, delivery</b></div>
-      <div><span>Status</span><b>Ready for assets</b></div>
+    <section class="meta" aria-label="项目详情">
+      <div><span>Role</span><b>品牌设计 / 页面实现 / 内容编排</b></div>
+      <div><span>Scope</span><b>开屏动效 / 项目导航 / 性能优化</b></div>
+      <div><span>Live</span><b><a href="https://www.17shiqi.top/" target="_blank" rel="noopener">www.17shiqi.top</a></b></div>
     </section>
-    <section class="media-grid" aria-label="Project media placeholders">
-      <div class="placeholder large" data-label="Hero image or video"></div>
-      <div class="placeholder" data-label="Process image"></div>
-      <div class="placeholder" data-label="Final output"></div>
+
+    <section class="error-showcase method-showcase" aria-label="QIVENN 首页展示">
+      <figure class="error-plate error-plate-full capture-home">
+        <img src="qivenn-portfolio/home-index.webp" alt="QIVENN 正式站首页截图" loading="eager" decoding="async" fetchpriority="high">
+        <figcaption>
+          <span>01 / Homepage</span>
+          <b>作品入口作为首页主视觉</b>
+          <p>真实界面截图：右侧黑色标题既构成页面节奏，也直接进入每一项作品；左下角保留个人身份与联系入口，让首屏同时承担导航与品牌表达。</p>
+        </figcaption>
+      </figure>
     </section>
-    <section class="copy-block">
-      <h2>Project<br>Story</h2>
-      <p>Replace this with your narrative once the actual work is ready: context, constraints, idea, process, result, and credits.</p>
+
+    <section class="error-section" aria-label="品牌与交互">
+      <div class="error-heading">
+        <span>02</span>
+        <h2>Identity<br>& Motion</h2>
+        <p>从名称、字标到项目进入方式，网站建立了一套可以被反复使用的个人品牌体验。</p>
+      </div>
+      <div class="error-grid">
+        <figure class="error-plate capture-opening">
+          <img src="qivenn-portfolio/opening-sequence.webp" alt="QIVENN 开屏动效截图" loading="lazy" decoding="async">
+          <figcaption><span>Opening</span><b>QIVENN 开屏标识</b><p>字母线条完整描绘后转为实体标识，右上角角标共同形成进入作品集前的品牌记忆。</p></figcaption>
+        </figure>
+        <figure class="error-plate capture-home">
+          <img src="qivenn-portfolio/contact-interaction.webp" alt="QIVENN 微信联系弹窗截图" loading="lazy" decoding="async">
+          <figcaption><span>Contact</span><b>联系方式交互</b><p>首页可直接唤起微信二维码与电话入口，作品观看与沟通路径保持连贯。</p></figcaption>
+        </figure>
+      </div>
     </section>
-    <nav class="project-nav" aria-label="Project navigation">
+
+    <section class="error-section" aria-label="网站整理过程">
+      <div class="error-heading">
+        <span>03</span>
+        <h2>Build<br>Notes</h2>
+        <p>页面不是一个展示壳，而是不断承接新作品的内容系统：从设定集、IP 设计到交互装置与私人电台，都需要相同的进入逻辑与阅读节奏。</p>
+      </div>
+      <div class="method-list">
+        <article><span>01</span><h3>品牌建立</h3><p>以 QIVENN 作为个人品牌名称，以蓝紫主场景和黑色大标题保持鲜明识别。</p></article>
+        <article><span>02</span><h3>动效语言</h3><p>开屏描线、标题滑入与滚动响应连接首页和详情页的观看节奏。</p></article>
+        <article><span>03</span><h3>内容扩充</h3><p>将 IP、世界观、电台与交互项目整理为可继续增加素材的详情页面。</p></article>
+        <article><span>04</span><h3>加载优化</h3><p>重图集转换为 WebP，并控制开屏仅在本次浏览会话首次进入时播放。</p></article>
+      </div>
+    </section>
+
+    <p class="method-note">本页图像均截取自正在发布的个人网站界面。当前站点将品牌、作品展示、联系方式与性能处理合并为同一个持续维护的作品集项目。</p>
+    <nav class="project-nav" aria-label="项目导航">
       <a href="project-07.html">Previous</a>
       <a href="project-01.html">Next</a>
     </nav>
@@ -48,5 +84,3 @@
 </script>
 </body>
 </html>
-
-

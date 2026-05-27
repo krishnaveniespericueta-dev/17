@@ -1264,3 +1264,126 @@ body.work-page.is-scrolled .logo{
 }
 .project-nav a:hover{transform:translateX(6px)}
 .project-nav a:first-child:hover{transform:translateX(-6px)}
+
+.method-project .hero{
+  grid-template-columns:minmax(0,1fr);
+  align-content:end;
+  gap:30px;
+  min-height:58vh;
+  overflow:visible;
+}
+.method-project h1{
+  max-width:100%;
+  font-size:clamp(68px,6.25vw,112px);
+}
+.method-project .summary{
+  max-width:880px;
+  margin:0 0 .2rem;
+  padding:18px 0 0;
+  border-top:1px solid rgba(5,0,9,.22);
+  color:rgba(5,0,9,.72);
+  font-size:18px;
+  line-height:1.75;
+  text-wrap:pretty;
+}
+.method-showcase{
+  margin:8vh 0 10vh;
+}
+.method-hero-media img{
+  aspect-ratio:16 / 9;
+  object-fit:cover;
+}
+.method-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+  margin:8vh 0 10vh;
+  padding-top:22px;
+  border-top:1px solid rgba(5,0,9,.18);
+}
+.method-metrics article{
+  min-height:132px;
+  padding:21px 20px;
+  background:rgba(72,1,255,.055);
+}
+.method-metrics b{
+  display:block;
+  margin-bottom:10px;
+  font-family:"Druk Wide Web",Arial,sans-serif;
+  font-size:32px;
+  line-height:1;
+}
+.method-metrics span{
+  display:block;
+  color:rgba(5,0,9,.68);
+  font-size:15px;
+  line-height:1.55;
+}
+.method-list{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
+  margin-top:30px;
+}
+.method-list article{
+  min-height:176px;
+  padding:20px 19px;
+  border-top:2px solid var(--ink);
+}
+.method-list span{
+  color:var(--violet);
+  font-size:11px;
+}
+.method-list h3{
+  margin:16px 0 10px;
+  font-size:20px;
+}
+.method-list p{
+  margin:0;
+  color:rgba(5,0,9,.69);
+  font-size:15px;
+  line-height:1.62;
+}
+.method-note{
+  margin:9vh 0;
+  padding:24px 28px;
+  border-left:4px solid var(--violet);
+  background:rgba(72,1,255,.052);
+  color:rgba(5,0,9,.72);
+  font-size:16px;
+  line-height:1.7;
+}
+.prompt-blueprint{
+  margin:8vh 0 10vh;
+  padding:32px 34px 36px;
+  background:var(--ink);
+  color:var(--paper);
+}
+.prompt-blueprint > span{
+  display:block;
+  margin-bottom:23px;
+  color:rgba(242,242,242,.52);
+  font-size:11px;
+  text-transform:uppercase;
+}
+.prompt-blueprint p{
+  max-width:78rem;
+  margin:0 0 19px;
+  font-size:22px;
+  line-height:1.58;
+}
+.prompt-blueprint small{
+  display:block;
+  max-width:64rem;
+  color:rgba(242,242,242,.66);
+  font-size:15px;
+  line-height:1.65;
+}
+.portfolio-project .error-plate img{
+  background:#4801ff;
+}
+.portfolio-project .capture-home img,
+.portfolio-project .capture-opening img{
+  aspect-ratio:16 / 10;
+  object-fit:cover;
+}

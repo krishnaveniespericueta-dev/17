@@ -1,41 +1,75 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#4801ff">
-<title>Prompt Studies | 17 SHIQI</title>
+<title>Prompt Lab Studies | 17 SHIQI</title>
 <link rel="stylesheet" href="project-style.css">
 </head>
-<body class="work-page loading">
+<body class="work-page error-project method-project loading">
   <header class="topbar">
     <a class="logo" href="/">SQH<br>Portfolio</a>
-    <a class="back" href="/" aria-label="Back to portfolio"></a>
+    <a class="back" href="/" aria-label="返回首页"></a>
   </header>
   <main class="project">
     <section class="hero">
       <div>
-        <p class="kicker">2025 / Selected Work</p>
-        <h1>Prompt<br>Studies</h1>
+        <p class="kicker">2026 / AIGC Prompt 研究</p>
+        <h1>Prompt Lab<br>Studies</h1>
       </div>
-      <p class="summary">A placeholder case study for prompt structures, testing notes, and model-response refinement.</p>
+      <p class="summary">从一个概念词开始，将角色性格、世界规则、材质光影、镜头构图与负面约束拆成可复用的生成稿。结合 Error 27 与 Sanctuary Codex，这一页呈现我如何把文本设定推进为稳定的视觉系列。</p>
     </section>
-    <section class="meta" aria-label="Project details">
-      <div><span>Role</span><b>Motion direction</b></div>
-      <div><span>Scope</span><b>Animation, timing, prototype</b></div>
-      <div><span>Status</span><b>Ready for assets</b></div>
+    <section class="meta" aria-label="项目详情">
+      <div><span>Role</span><b>AIGC 视觉策划 / Prompt 设计</b></div>
+      <div><span>Scope</span><b>概念拆解 / 风格约束 / 输出复核</b></div>
+      <div><span>Output</span><b>可复用生成稿方法</b></div>
     </section>
-    <section class="media-grid" aria-label="Project media placeholders">
-      <div class="placeholder large" data-label="Motion reel or hero video"></div>
-      <div class="placeholder" data-label="Storyboard frame"></div>
-      <div class="placeholder" data-label="Animation detail"></div>
+
+    <section class="error-showcase method-showcase" aria-label="Prompt 工作台">
+      <figure class="error-plate error-plate-full method-hero-media">
+        <img src="prompt-studies/prompt-workbench.webp" alt="Prompt 研究工作台展示图" loading="eager" decoding="async" fetchpriority="high">
+        <figcaption>
+          <span>01 / Workbench</span>
+          <b>从设定语言到视觉输出</b>
+          <p>展示化方法图：提示词不是一次性的描述，而是角色、环境、光影、材质、构图与限制条件能够反复组合的一组生成规则。</p>
+        </figcaption>
+      </figure>
     </section>
-    <section class="copy-block">
-      <h2>Motion<br>Logic</h2>
-      <p>Add the intent, timing rules, transitions, and visual references behind the motion system here. The page is ready for video embeds or still frames.</p>
+
+    <section class="prompt-blueprint" aria-label="可复用提示词结构">
+      <span>Reusable Prompt Blueprint</span>
+      <p>概念锚点 + 主体身份与情绪 + 世界与空间规则 + 材质和光影 + 镜头构图 + 叙事动作 + 负面约束 + 输出检查</p>
+      <small>每组生成稿先固定角色和视觉语法，再只替换可控变量，例如场景、姿态或画面尺度。这样能在保持系列一致性的前提下，继续拓展海报、设定图、界面应用和关键场景。</small>
     </section>
-    <nav class="project-nav" aria-label="Project navigation">
+
+    <section class="error-section" aria-label="Prompt 案例">
+      <div class="error-heading">
+        <span>02</span>
+        <h2>Visual<br>Series</h2>
+        <p>两组已经完成的项目，分别验证了软萌 IP 的传播语言与宏大世界观的场景一致性。</p>
+      </div>
+      <div class="error-grid">
+        <figure class="error-plate">
+          <img src="error-27/visual-system-overview.webp" alt="Error 27 视觉系统总览" loading="lazy" decoding="async">
+          <figcaption><span>Error 27</span><b>人生正在输入</b><p>用毛绒材质、旧系统弹窗、错误红与低饱和灰白，稳定“安静报错”的 IP 识别。</p></figcaption>
+        </figure>
+        <figure class="error-plate">
+          <img src="sanctuary-codex/hero.webp" alt="Sanctuary Codex 世界观主视觉" loading="lazy" decoding="async">
+          <figcaption><span>Sanctuary Codex</span><b>冰河纪元设定集</b><p>以冷暖阵营关系、宗教建筑和工业遗迹，保持场景扩写时的世界规则统一。</p></figcaption>
+        </figure>
+      </div>
+      <div class="method-list">
+        <article><span>01</span><h3>概念锚点</h3><p>先定义角色或世界观最不可替换的气质，避免系列走散。</p></article>
+        <article><span>02</span><h3>结构拆分</h3><p>拆开主体、空间、材质、镜头和光线，形成可编辑模块。</p></article>
+        <article><span>03</span><h3>一致控制</h3><p>用色彩、道具、服装与构图规则维持跨图识别度。</p></article>
+        <article><span>04</span><h3>生成复核</h3><p>识别形体、语义与风格漂移，再回写到下一版生成稿。</p></article>
+      </div>
+    </section>
+
+    <p class="method-note">页面以已完成的 IP 设定与世界观视觉作为案例。每张作品图对应的可复用生成稿已在项目页面中建立展示逻辑，便于后续补充系列内容。</p>
+    <nav class="project-nav" aria-label="项目导航">
       <a href="project-03.html">Previous</a>
       <a href="project-05.html">Next</a>
     </nav>
@@ -48,5 +82,3 @@
 </script>
 </body>
 </html>
-
-

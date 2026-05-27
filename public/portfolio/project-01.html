@@ -1,41 +1,75 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <meta name="theme-color" content="#4801ff">
-<title>Quality Horizon | 17 SHIQI</title>
+<title>Evaluation Framework | 17 SHIQI</title>
 <link rel="stylesheet" href="project-style.css">
 </head>
-<body class="work-page loading">
+<body class="work-page error-project method-project loading">
   <header class="topbar">
     <a class="logo" href="/">SQH<br>Portfolio</a>
-    <a class="back" href="/" aria-label="Back to portfolio"></a>
+    <a class="back" href="/" aria-label="返回首页"></a>
   </header>
   <main class="project">
     <section class="hero">
       <div>
-        <p class="kicker">2026 / Selected Work</p>
-        <h1>Quality<br>Horizon</h1>
+        <p class="kicker">2026 / AI 质量评测方法</p>
+        <h1>Evaluation<br>Framework</h1>
       </div>
-      <p class="summary">A placeholder case study for the core Sustainable Quality Horizon portfolio identity.</p>
+      <p class="summary">以设计判断为起点，把空间、风格、材质与光影的观察转译为可执行的模型评测标准。这一页整理我如何组织测试样本、比较输出、记录 Badcase，并将结论反馈到提示词与标注规则中。</p>
     </section>
-    <section class="meta" aria-label="Project details">
-      <div><span>Role</span><b>Design and build</b></div>
-      <div><span>Scope</span><b>Website, motion, visuals</b></div>
-      <div><span>Status</span><b>Ready for assets</b></div>
+    <section class="meta" aria-label="项目详情">
+      <div><span>Role</span><b>AI 训练师 / 模型评测</b></div>
+      <div><span>Scope</span><b>Prompt 测试 / SBS 评测 / Badcase 归因</b></div>
+      <div><span>Evidence</span><b>方法展示与经验整理</b></div>
     </section>
-    <section class="media-grid" aria-label="Project media placeholders">
-      <div class="placeholder large" data-label="Hero image or video"></div>
-      <div class="placeholder" data-label="Detail image 01"></div>
-      <div class="placeholder" data-label="Detail image 02"></div>
+
+    <section class="error-showcase method-showcase" aria-label="质量评测工作台">
+      <figure class="error-plate error-plate-full method-hero-media">
+        <img src="evaluation-framework/evaluation-hero.webp" alt="视觉质量评测工作台展示图" loading="eager" decoding="async" fetchpriority="high">
+        <figcaption>
+          <span>01 / Review Desk</span>
+          <b>视觉质量评测工作台</b>
+          <p>展示化方法图：将对照样本、评分维度、缺陷标签与输出分布放在同一视野中，便于从“看起来不对”推进到可记录、可复查的判断。</p>
+        </figcaption>
+      </figure>
     </section>
-    <section class="copy-block">
-      <h2>Case<br>Study</h2>
-      <p>Use this area for the project challenge, process, design decisions, and measurable results. The layout is built so you can add images or videos later without changing the page structure.</p>
+
+    <section class="method-metrics" aria-label="经验数据">
+      <article><b>12,000+</b><span>Agent 对话审查与改写，覆盖回复质量、语气一致性与问题归因。</span></article>
+      <article><b>30,000+</b><span>图像样本结构化标注，将视觉观察转化为可检索的数据规则。</span></article>
+      <article><b>15,000+</b><span>视频样本筛选与标注，关注镜头、运动、稳定性与表现偏差。</span></article>
     </section>
-    <nav class="project-nav" aria-label="Project navigation">
+
+    <section class="error-section" aria-label="评测路径">
+      <div class="error-heading">
+        <span>02</span>
+        <h2>Review<br>Route</h2>
+        <p>评测不是只给结果打分，而是建立从任务目标、样本对照到错误归因和下一轮迭代的闭环。</p>
+      </div>
+      <div class="error-grid">
+        <figure class="error-plate">
+          <img src="evaluation-framework/comparison-board.webp" alt="视觉输出对照与错误分类展示图" loading="lazy" decoding="async">
+          <figcaption><span>Compare</span><b>输出对照与错误分类</b><p>用同一评价维度比较质量、结构偏差与风格漂移，让差异有可追踪的依据。</p></figcaption>
+        </figure>
+        <figure class="error-plate">
+          <img src="evaluation-framework/multimodal-review.webp" alt="多模态复核路径展示图" loading="lazy" decoding="async">
+          <figcaption><span>Pipeline</span><b>多模态复核路径</b><p>图像、视频与对话分别建立检查视角，再在质量结论处汇合成统一反馈。</p></figcaption>
+        </figure>
+      </div>
+      <div class="method-list">
+        <article><span>01</span><h3>定义任务</h3><p>先明确模型要完成什么，以及哪些表现会影响最终使用。</p></article>
+        <article><span>02</span><h3>组织样本</h3><p>以可比较的输入和输出形成测试集，保证观察并非偶然。</p></article>
+        <article><span>03</span><h3>归因错误</h3><p>区分结构、语义、风格、运动与安全问题，记录可复查标签。</p></article>
+        <article><span>04</span><h3>反馈迭代</h3><p>将结论回写到 Prompt、标注规范和工作流，推动下一轮提升。</p></article>
+      </div>
+    </section>
+
+    <p class="method-note">页面图像为作品集中的方法演示图，用于表达我的评测组织方式；项目经验数据来自个人简历内容，不展示受保密约束的原始任务材料。</p>
+    <nav class="project-nav" aria-label="项目导航">
       <a href="project-08.html">Previous</a>
       <a href="project-02.html">Next</a>
     </nav>
@@ -48,5 +82,3 @@
 </script>
 </body>
 </html>
-
-
